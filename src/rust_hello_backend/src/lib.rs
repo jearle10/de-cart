@@ -1,3 +1,18 @@
+use ic_cdk::export::candid::{ candid_method };
+
+#[ic_cdk::update]
+#[candid_method(update)]
+fn add_merchant() -> String {
+    format!("Added a new merchant to platform")
+}
+
+#[ic_cdk::update]
+#[candid_method(update)]
+fn remove_merchant() -> String {
+    format!("Removed a merchant from the platform")
+}
+
+
 #[ic_cdk::query]
 fn greet(name: String) -> String {
     format!("Hello, {}!", name)
@@ -31,4 +46,18 @@ fn remove_product() -> String {
 #[ic_cdk::query]
 fn import_products() -> String {
     format!("Fetched products from e-commerce platform")
+}
+
+#[test]
+fn check_candid_interface() {
+    use candid::utils::{service_compatible, CandidSource};
+    use std::path::Path;
+
+    candid::export_service!();
+    let new_interface = __export_service();
+
+    service_compatible(
+        CandidSource::Text(&new_interface),
+        CandidSource::File(Path::new("rust_hello_backend.did")),
+    ).unwrap();
 }

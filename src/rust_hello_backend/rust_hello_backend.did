@@ -1,8 +1,11 @@
 service : {
     "greet": (text) -> (text) query;
+    "get_self": () -> (text) query;
     "add_to_cart": () -> (text) query;
     "delete_from_cart": () -> (text) query;
     "add_product": () -> (text) query;
     "remove_product": () -> (text) query;
     "import_products": () -> (text) query;
+    "add_merchant": () -> (text);
+    "remove_merchant": () -> (text);
 }
