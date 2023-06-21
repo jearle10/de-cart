@@ -2,9 +2,31 @@ use ic_cdk::export::candid::{ candid_method, Deserialize };
 use std::cell::{Ref, RefCell};
 use candid::CandidType;
 
-#[derive(Clone, Debug, Deserialize, CandidType)]
+
+/*
+
+1. Need to break out the methods into this file into three canisters
+- Merchant
+- Product
+- Cart
+
+2. Need to work out how to generate candid UI automatically from methods
+
+3. Add tests
+ */
+
+#[derive(Clone, Debug, Default, Deserialize, CandidType)]
 struct Merchant {
-    id : candid::Nat,
+    id : candid::Nat, // This should be the wallet id of the merchant
+    products : Vec<candid::Nat> // List of product ids
+}
+
+#[derive(Clone, Debug, Default, Deserialize, CandidType)]
+struct Product {
+    sku: String,
+    name: String,
+    price: candid::Nat,
+    image_url: String
 }
 
 thread_local!{ static MERCHANTS : RefCell<Vec<Merchant>> = RefCell::new(vec![]) }
@@ -15,7 +37,7 @@ fn add_merchant(id : candid::Nat) {
     MERCHANTS.with(|merchants| {
        merchants
            .borrow_mut()
-           .insert(0, Merchant { id })
+           .insert(0, Merchant::default())
     });
 }
 
