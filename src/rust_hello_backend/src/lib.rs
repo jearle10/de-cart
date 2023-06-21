@@ -1,9 +1,27 @@
 use ic_cdk::export::candid::{ candid_method };
+use std::cell::{Ref, RefCell};
+
+thread_local!{ static MERCHANTS : RefCell<Vec<candid::Nat>> = RefCell::new(vec![]) }
 
 #[ic_cdk::update]
 #[candid_method(update)]
-fn add_merchant() -> String {
-    format!("Added a new merchant to platform")
+fn add_merchant(id : candid::Nat) {
+    MERCHANTS.with(|merchants| {
+       merchants
+           .borrow_mut()
+           .insert(0, id)
+    });
+}
+
+#[ic_cdk::query]
+fn get_merchant(id: candid::Nat) -> candid::Nat {
+    MERCHANTS.with(|merchants| {
+        merchants
+            .borrow()
+            .first()
+            .unwrap()
+            .clone()
+    })
 }
 
 #[ic_cdk::update]

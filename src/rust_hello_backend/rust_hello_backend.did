@@ -6,6 +6,7 @@ service : {
     "add_product": () -> (text) query;
     "remove_product": () -> (text) query;
     "import_products": () -> (text) query;
-    "add_merchant": () -> (text);
+    "add_merchant": (nat) -> ();
+    "get_merchant": (nat) -> (nat);
     "remove_merchant": () -> (text);
 }
