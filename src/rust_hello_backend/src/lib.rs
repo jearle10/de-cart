@@ -1,7 +1,13 @@
-use ic_cdk::export::candid::{ candid_method };
+use ic_cdk::export::candid::{ candid_method, Deserialize };
 use std::cell::{Ref, RefCell};
+use candid::CandidType;
 
-thread_local!{ static MERCHANTS : RefCell<Vec<candid::Nat>> = RefCell::new(vec![]) }
+#[derive(Clone, Debug, Deserialize, CandidType)]
+struct Merchant {
+    id : candid::Nat,
+}
+
+thread_local!{ static MERCHANTS : RefCell<Vec<Merchant>> = RefCell::new(vec![]) }
 
 #[ic_cdk::update]
 #[candid_method(update)]
@@ -9,12 +15,12 @@ fn add_merchant(id : candid::Nat) {
     MERCHANTS.with(|merchants| {
        merchants
            .borrow_mut()
-           .insert(0, id)
+           .insert(0, Merchant { id })
     });
 }
 
 #[ic_cdk::query]
-fn get_merchant(id: candid::Nat) -> candid::Nat {
+fn get_merchant(id: candid::Nat) -> Merchant {
     MERCHANTS.with(|merchants| {
         merchants
             .borrow()
@@ -23,6 +29,15 @@ fn get_merchant(id: candid::Nat) -> candid::Nat {
             .clone()
     })
 }
+
+
+#[ic_cdk::query]
+#[candid_method(query)]
+fn get_self() -> String {
+    let id = ic_cdk::api::caller();
+    format!("Cannister was called by {}" , id)
+}
+
 
 #[ic_cdk::update]
 #[candid_method(update)]

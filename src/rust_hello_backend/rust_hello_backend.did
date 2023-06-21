@@ -1,3 +1,7 @@
+type Merchant = record {
+    "id" : nat;
+}
+
 service : {
     "greet": (text) -> (text) query;
     "get_self": () -> (text) query;
@@ -7,6 +11,6 @@ service : {
     "remove_product": () -> (text) query;
     "import_products": () -> (text) query;
     "add_merchant": (nat) -> ();
-    "get_merchant": (nat) -> (nat);
+    "get_merchant": (nat) -> (Merchant) query;
     "remove_merchant": () -> (text);
 }
