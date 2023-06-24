@@ -1,0 +1,8 @@
+type Merchant = record { id : nat; products : vec nat };
+service : {
+  add_merchant : (nat) -> ();
+  add_to_cart : () -> (text);
+  delete_from_cart : () -> (text);
+  get_merchant : (nat) -> (Merchant) query;
+  remove_merchant : () -> (text);
+}
