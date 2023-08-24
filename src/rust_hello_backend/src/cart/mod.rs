@@ -11,3 +11,9 @@ fn add_to_cart() -> String {
 fn delete_from_cart() -> String {
     format!("Remove product from cart")
 }
+
+#[ic_cdk::update]
+#[candid_method(query)]
+fn get_cart() -> String {
+    format!("Retrieved cart ")
+}

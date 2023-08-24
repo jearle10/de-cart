@@ -1,3 +1,5 @@
+pub (crate) mod types;
+
 use ic_cdk::export::candid::{ candid_method, Deserialize, CandidType };
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader,
@@ -8,30 +10,35 @@ use ic_cdk::api::management_canister::http_request::{
 use base64;
 use base64::Engine;
 use ic_cdk::api::call::CallResult;
-
-#[derive(Clone, Debug, Default, Deserialize, CandidType)]
-struct Product {
-    sku: String,
-    name: String,
-    price: candid::Nat,
-    image_url: String
-}
+use types::Product;
 
 #[ic_cdk::update]
 #[candid_method(update)]
-fn add_product() -> String {
+fn list_product() -> String {
     format!("Listed product on de-cart")
 }
 
 #[ic_cdk::update]
 #[candid_method(update)]
-fn remove_product() -> String {
+fn delist_product() -> String {
     format!("Removed product on de-cart")
+}
+
+#[ic_cdk::query]
+#[candid_method(query)]
+fn list_products() -> String {
+    format!("Listed products")
+}
+
+#[ic_cdk::query]
+#[candid_method(update)]
+fn get_product() -> String {
+    format!("Retrieved product")
 }
 
 #[ic_cdk::update]
 #[candid_method(update)]
-async fn get_cscart_products(
+async fn import_products(
     username : String,
     password : String,
     host : String,

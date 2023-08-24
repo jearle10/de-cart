@@ -1,11 +1,14 @@
-type Merchant = record { id : nat; products : vec nat };
 service : {
-  add_merchant : (nat) -> ();
-  add_product : () -> (text);
   add_to_cart : () -> (text);
   delete_from_cart : () -> (text);
-  get_cscart_products : (text, text, text) -> (text);
-  get_merchant : (nat) -> (Merchant) query;
-  remove_merchant : () -> (text);
-  remove_product : () -> (text);
+  delist_product : () -> (text);
+  deregister_merchant : () -> (text);
+  get_cart : () -> (text) query;
+  get_merchant : (nat) -> () query;
+  get_product : () -> (text);
+  import_products : (text, text, text) -> (text);
+  list_product : () -> (text);
+  list_products : () -> (text) query;
+  register_merchant : (nat) -> ();
+  update_merchant : (nat) -> () query;
 }
