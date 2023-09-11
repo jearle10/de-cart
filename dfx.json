@@ -1,8 +1,8 @@
 {
   "canisters": {
-    "rust_hello_backend": {
-      "candid": "src/rust_hello_backend/backend.did",
-      "package": "rust_hello_backend",
+    "de_cart_backend": {
+      "candid": "src/de_cart_backend/backend.did",
+      "package": "de_cart_backend",
       "type": "rust"
     }
   },
