@@ -1,7 +1,7 @@
 pub(crate) mod types;
 
-use ic_cdk::export::candid::{candid_method, Deserialize, CandidType };
-use std::cell::RefCell;
+use ic_cdk::export::candid::{candid_method };
+
 use types::Merchant;
 use super::MERCHANTS;
 
@@ -13,7 +13,7 @@ fn get_self() -> String {
 
 #[ic_cdk::update]
 #[candid_method(update)]
-fn register_merchant(id : candid::Nat) {
+fn register_merchant(_id : candid::Nat) {
     MERCHANTS.with(|merchants| {
         merchants
             .borrow_mut()
@@ -29,13 +29,13 @@ fn deregister_merchant() -> String {
 
 #[ic_cdk::update]
 #[candid_method(query)]
-fn update_merchant(id: candid::Nat) {
+fn update_merchant(_id: candid::Nat) {
     format!("Updated merchant's details");
 }
 
 #[ic_cdk::query]
 #[candid_method(query)]
-fn get_merchant(id: candid::Nat){
+fn get_merchant(_id: candid::Nat){
     format!("Retrieved merchant's details");
     // MERCHANTS.with(|merchants| {
     //     merchants

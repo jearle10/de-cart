@@ -1,18 +1,17 @@
 pub (crate) mod types;
 use crate::api;
 
-use ic_cdk::export::candid::{ candid_method, Deserialize, CandidType };
+use ic_cdk::export::candid::{ candid_method };
 
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader,
-    HttpMethod, HttpResponse, TransformArgs,
-    TransformContext,
+    HttpMethod,
 };
 
 use base64;
 use base64::Engine;
-use ic_cdk::api::call::CallResult;
-use types::Product;
+
+
 
 #[ic_cdk::update]
 #[candid_method(update)]

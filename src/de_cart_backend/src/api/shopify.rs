@@ -1,8 +1,4 @@
-use ic_cdk::api::management_canister::http_request::{
-    http_request, CanisterHttpRequestArgument, HttpHeader,
-    HttpMethod, HttpResponse, TransformArgs,
-    TransformContext,
-};
+
 
 /*
 Wrapper struct for the  the shopify api
@@ -26,7 +22,7 @@ impl Shopify {
         String::from("Hello from the api")
     }
 
-    pub fn get_product (id : String){
+    pub fn get_product (_id : String){
         todo!()
     }
 
@@ -34,19 +30,19 @@ impl Shopify {
         todo!()
     }
 
-    pub fn create_order(product_id : String){
+    pub fn create_order(_product_id : String){
         todo!()
     }
 
-    pub fn create_fulfilment(order_id : String){
+    pub fn create_fulfilment(_order_id : String){
         todo!()
     }
 
-    pub fn update_fulfilment(order_id : String){
+    pub fn update_fulfilment(_order_id : String){
         todo!()
     }
 
-    pub fn delete_fulfilment(id : String){
+    pub fn delete_fulfilment(_id : String){
         todo!()
     }
 }

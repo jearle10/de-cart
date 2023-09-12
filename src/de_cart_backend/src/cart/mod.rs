@@ -1,4 +1,4 @@
-use ic_cdk::export::candid::{ candid_method, Deserialize, CandidType };
+use ic_cdk::export::candid::{ candid_method };
 
 #[ic_cdk::update]
 #[candid_method(update)]
