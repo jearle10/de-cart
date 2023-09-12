@@ -1,6 +1,8 @@
 pub (crate) mod types;
+use crate::api;
 
 use ic_cdk::export::candid::{ candid_method, Deserialize, CandidType };
+
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader,
     HttpMethod, HttpResponse, TransformArgs,
@@ -33,7 +35,7 @@ fn list_products() -> String {
 #[ic_cdk::query]
 #[candid_method(update)]
 fn get_product() -> String {
-    format!("Retrieved product")
+    api::Shopify::api()
 }
 
 #[ic_cdk::update]

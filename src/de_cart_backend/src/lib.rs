@@ -1,6 +1,7 @@
 mod merchant;
 mod cart;
 mod product;
+mod api;
 
 use std::cell::RefCell;
 use merchant::types::Merchant;
