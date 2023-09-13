@@ -6,6 +6,8 @@ mod api;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use merchant::types::Merchant;
+use ic_cdk;
+use ic_cdk::export_candid;
 
 /*
 For now the users will remain anon. Each cart will have an associated
@@ -19,6 +21,8 @@ thread_local!{
     // Can make the list of products public but encrypt sensitive data ?
     static PRODUCTS : RefCell<HashMap<String, String>> = RefCell::default();
 }
+
+export_candid!();
 
 #[test]
 fn check_candid_interface() {

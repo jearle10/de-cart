@@ -1,7 +1,7 @@
 pub (crate) mod types;
 use crate::api;
 
-use ic_cdk::export::candid::{ candid_method };
+use candid::candid_method;
 
 use ic_cdk::api::management_canister::http_request::{
     http_request, CanisterHttpRequestArgument, HttpHeader,
@@ -13,32 +13,27 @@ use base64::Engine;
 
 
 
-#[ic_cdk::update]
-#[candid_method(update)]
+// #[ic_cdk::update]
 fn list_product() -> String {
     format!("Listed product on de-cart")
 }
 
 #[ic_cdk::update]
-#[candid_method(update)]
 fn delist_product() -> String {
     format!("Removed product on de-cart")
 }
 
-#[ic_cdk::query]
-#[candid_method(query)]
+// #[ic_cdk::query]
 fn list_products() -> String {
     format!("Listed products")
 }
 
 #[ic_cdk::query]
-#[candid_method(update)]
 fn get_product() -> String {
     api::Shopify::api()
 }
 
-#[ic_cdk::update]
-#[candid_method(update)]
+// #[ic_cdk::update]
 async fn import_products(
     username : String,
     password : String,
@@ -72,7 +67,7 @@ async fn import_products(
         transform: None, //optional for request
     };
 
-    match http_request(request).await {
+    match http_request(request, 1).await {
         Ok((response,)) => {
             let body = String::from_utf8(response.body)
                 .expect("Invalid utf8 string received");

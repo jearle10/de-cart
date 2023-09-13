@@ -1,7 +1,7 @@
 {
   "canisters": {
     "de_cart_backend": {
-      "candid": "src/de_cart_backend/backend.did",
+      "candid": "src/de_cart_backend/de_cart_backend.did",
       "package": "de_cart_backend",
       "type": "rust"
     }

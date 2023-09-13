@@ -1,0 +1,1 @@
+service : { delist_product : () -> (text); get_product : () -> (text) query }

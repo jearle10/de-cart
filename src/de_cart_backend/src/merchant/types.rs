@@ -1,4 +1,4 @@
-use ic_cdk::export::candid::{Deserialize, CandidType };
+use candid::{Deserialize, CandidType };
 
 #[derive(Clone, Debug, Default, Deserialize, CandidType)]
 pub struct Merchant {
