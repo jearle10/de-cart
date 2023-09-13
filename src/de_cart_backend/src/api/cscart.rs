@@ -6,24 +6,16 @@ use ic_cdk::api::management_canister::http_request::{
     http_request
 };
 
+use base64;
+use base64::Engine;
+
 /*
 Wrapper struct for the  the shopify api
 */
-pub struct Shopify {
+pub struct Cscart {
 }
 
-/*
-Implementations for the full shopify api is not needed
-Only features needs for app
-- Read-only products
-- Update Cart
-- Checkout
-
-Once the below methods have been tested E2E; they can be
-abstracted into an interface / trait and then further platforms can be supported
-by implementing this trait ('CommerceProvider' trait)
-*/
-impl Shopify {
+impl Cscart {
     pub fn api () -> String {
         String::from("Hello from the api")
     }
@@ -31,25 +23,26 @@ impl Shopify {
     pub fn get_product () -> String {
         todo!()
     }
-
     pub async fn get_all_products(
-        access_token : String,
+        username : String ,
+        password : String,
         host : String
     ) -> String {
+        // Construct basic auth token using credentials
+        let credentials = format!("{}:{}", username , password);
+        let engine = base64::engine::general_purpose::STANDARD;
+        let token = engine.encode(credentials.as_bytes());
 
+        let url = format!("https://{}/api/2.0/products", host);
 
-        let url = format!(
-            "https://{}/admin/api/2023-07/products.json?ids&fields=id,title,status",
-            host
-        );
         let request_headers = vec![
-            // HttpHeader {
-            //     name: "Host".to_string(),
-            //     value: format!("{host}:443"),
-            // },
             HttpHeader {
-                name: "X-Shopify-Access-Token".to_string(),
-                value: access_token,
+                name: "Host".to_string(),
+                value: format!("{host}:443"),
+            },
+            HttpHeader {
+                name: "Authorization".to_string(),
+                value: format!("Bearer {token}"),
             },
         ];
 
@@ -62,9 +55,6 @@ impl Shopify {
             transform: None, //optional for request
         };
 
-        // 1_603_129_200 cycles - seems to be the min required from testing locally
-        // This will need increasing when deployed to a public subnet
-
         match http_request(request, 1_603_129_200).await {
             Ok((response,)) => {
                 let body = String::from_utf8(response.body)
@@ -73,6 +63,8 @@ impl Shopify {
             },
             Err(e) => ic_cdk::println!("{:?}", e),
         }
+
+        ic_cdk::println!("Testing printing logs");
         format!("Fetched cscart products")
     }
 
