@@ -1,5 +1,1 @@
-service : {
-  delist_product : () -> (text);
-  get_product : () -> (text) query;
-  import_products : (text, text) -> (text);
-}
+service : { add_default_product : () -> (); list_products : () -> (text) query }

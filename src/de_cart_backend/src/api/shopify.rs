@@ -32,11 +32,7 @@ impl Shopify {
         todo!()
     }
 
-    pub async fn get_all_products(
-        access_token : String,
-        host : String
-    ) -> String {
-
+    pub async fn get_all_products(access_token : String, host : String) -> String {
 
         let url = format!(
             "https://{}/admin/api/2023-07/products.json?ids&fields=id,title,status",
