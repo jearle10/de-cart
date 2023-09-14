@@ -51,7 +51,7 @@ impl Store<Product> for ProductStore {
         ic_cdk::println!("updated product");
     }
 
-    fn delete(&self, id: String) {
-        ic_cdk::println!("deleted product");
+    fn delete(&mut self, id: String) -> Option<Product> {
+        self.products.remove(&id)
     }
 }

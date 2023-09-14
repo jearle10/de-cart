@@ -3,7 +3,7 @@ pub (crate) mod types;
 use std::collections::HashMap;
 use crate::{api, product};
 use crate::merchant::types::Merchant;
-use crate::product::types::Product;
+use product::types::Product;
 use crate::state::{ProductStore, State};
 
 use super::PRODUCTS;
@@ -17,22 +17,7 @@ fn add_product(item : Product){
             .products
             .as_mut() // Box<ProductStore> -> ProductStore
             .add(item);
-
-        ic_cdk::println!("{:#?}", STATE)
     });
-}
-
-// #[ic_cdk::update]
-fn delist_product() -> String {
-    format!("Removed product on de-cart")
-}
-
-#[ic_cdk::query]
-fn list_products() -> HashMap<String , Product> {
-    STATE.with(|state| {
-        let mut state = state.borrow_mut();
-        state.products.as_mut().get_all().unwrap_or(HashMap::new())
-    })
 }
 
 #[ic_cdk::query]
@@ -43,6 +28,25 @@ fn get_product(id : String) -> Option<Product> {
             .products
             .as_ref() // Box<ProductStore> -> ProductStore
             .get(id)
+    })
+}
+
+#[ic_cdk::query]
+fn list_products() -> HashMap<String , Product> {
+    STATE.with(|state| {
+        let mut state = state.borrow_mut();
+        state.products.as_mut().get_all().unwrap_or(HashMap::new())
+    })
+}
+
+#[ic_cdk::update]
+fn remove_product(id : String) -> Option<Product> {
+    STATE.with(|state| {
+        state
+            .borrow_mut() // RefCell -> State
+            .products
+            .as_mut() // Box<ProductStore> -> ProductStore
+            .delete(id)
     })
 }
 

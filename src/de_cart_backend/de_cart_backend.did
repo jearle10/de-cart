@@ -10,4 +10,5 @@ service : {
   add_product : (Product) -> ();
   get_product : (text) -> (opt Product) query;
   list_products : () -> (vec record { text; Product }) query;
+  remove_product : (text) -> (opt Product);
 }

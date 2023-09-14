@@ -10,5 +10,5 @@ pub trait Store <T> {
     fn add(&mut self, item : T);
     fn get_all(&self) -> Result<HashMap<String,T>, Error >;
     fn update(&self, id: String , item : Error);
-    fn delete(&self , id : String);
+    fn delete(&mut self , id : String) -> Option<T>;
 }
