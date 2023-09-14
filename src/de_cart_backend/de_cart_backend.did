@@ -1,1 +1,13 @@
-service : { add_default_product : () -> (); list_products : () -> (text) query }
+type Product = record {
+  sku : text;
+  merchant_id : text;
+  image_url : text;
+  name : text;
+  description : text;
+  price : nat;
+};
+service : {
+  add_product : (Product) -> ();
+  get_product : (text) -> (opt Product) query;
+  list_products : () -> (vec record { text; Product }) query;
+}

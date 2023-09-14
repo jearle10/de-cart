@@ -3,12 +3,12 @@ use candid::{ Deserialize, CandidType };
 
 #[derive(Clone, Debug, Deserialize, CandidType)]
 pub struct Product {
-    sku: String,
-    merchant_id : String,
-    name: String,
-    price: candid::Nat,
-    description: String,
-    image_url: String
+    pub sku: String,
+    pub merchant_id : String,
+    pub name: String,
+    pub price: candid::Nat,
+    pub description: String,
+    pub image_url: String
 }
 
 impl Default for Product {

@@ -1,6 +1,7 @@
 use crate::state::Store;
 use std::collections::HashMap;
 use std::io::Error;
+use candid::CandidType;
 use crate::product::types::Product;
 
 /*  Canister state   */
@@ -20,7 +21,7 @@ impl Default for State {
 
 
 /* Product store data structure */
-#[derive(Debug)]
+#[derive(Debug, CandidType)]
 pub struct ProductStore {
     products: HashMap<String , Product>
 }
@@ -34,12 +35,12 @@ impl Default for ProductStore {
 }
 
 impl Store<Product> for ProductStore {
-    fn get(&self, id: String) -> Result<Product, Error> {
-        Ok(Product::default())
+    fn get(&self, id: String) -> Option<Product> {
+        self.products.get(&id).cloned()
     }
 
     fn add(&mut self, item: Product) {
-        self.products.insert("w".to_string(), Product::default());
+        self.products.insert(item.sku.to_string(), item);
     }
 
     fn get_all(&self) -> Result<HashMap<String, Product>, Error> {
@@ -54,5 +55,3 @@ impl Store<Product> for ProductStore {
         ic_cdk::println!("deleted product");
     }
 }
-
-
