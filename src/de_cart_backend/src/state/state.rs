@@ -1,6 +1,6 @@
 use crate::state::Store;
 use crate::product::types::Product;
-use crate::state::ProductStore;
+use crate::state::ProductList;
 
 /*  Canister state   */
 pub struct State {
@@ -12,7 +12,7 @@ pub struct State {
 impl Default for State {
     fn default() -> Self {
         State {
-            products: Box::new(ProductStore::default()),
+            products: Box::new(ProductList::default()),
         }
     }
 }

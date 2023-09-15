@@ -1,7 +1,7 @@
 use crate::state::Store;
 use std::collections::HashMap;
 use std::io::Error;
-use candid::CandidType;
+use candid::{CandidType, Principal};
 use crate::product;
 use crate::product::types::Product;
 
@@ -17,14 +17,19 @@ ProductStore -> HashMap<Principal, ProductList>
 ProductList -> HashMap<String, Product>
 
 */
-
 /* Product store data structure */
 #[derive(Debug, CandidType)]
 pub struct ProductStore {
-    products: HashMap<String , Product>
+    products: HashMap<Principal , ProductList>
 }
 
-impl Default for ProductStore {
+/* Product list structure */
+#[derive(Debug, CandidType)]
+pub struct ProductList {
+    pub products: HashMap<String , Product>
+}
+
+impl Default for ProductList {
     fn default() -> Self {
         Self {
             products : HashMap::new()
@@ -32,7 +37,7 @@ impl Default for ProductStore {
     }
 }
 
-impl Store<Product> for ProductStore {
+impl Store<Product> for ProductList {
     fn get(&self, id: String) -> Option<Product> {
         self.products.get(&id).cloned()
     }

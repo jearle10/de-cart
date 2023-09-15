@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use crate::{api, product};
 use crate::merchant::types::Merchant;
 use product::types::Product;
-use crate::state::{ProductStore, State};
+use crate::state::{ProductList, State};
 
 use super::PRODUCTS;
 use super::STATE;
@@ -33,6 +33,8 @@ fn get_product(id : String) -> Option<Product> {
 
 #[ic_cdk::query]
 fn list_products() -> HashMap<String , Product> {
+    let principal = ic_cdk::caller();
+    ic_cdk::println!("{}", principal);
     STATE.with(|state| {
         let mut state = state.borrow_mut();
         state.products.as_mut().get_all().unwrap_or(HashMap::new())
