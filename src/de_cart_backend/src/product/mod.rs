@@ -10,34 +10,37 @@ use super::PRODUCTS;
 use super::STATE;
 
 #[ic_cdk::update]
-fn add_product(item : Product){
+fn add_product(item : Product) -> Option<Product>{
     STATE.with(|state| {
         state
             .borrow_mut() // RefCell -> State
             .products
             .as_mut() // Box<ProductStore> -> ProductStore
-            .add(item);
-    });
+            .add(item)
+    })
 }
 
 #[ic_cdk::query]
-fn get_product(id : String) -> Option<Product> {
+fn get_product(merchant_id : String , id : String) -> Option<Product>{
     STATE.with(|state| {
         state
             .borrow() // RefCell -> State
             .products
             .as_ref() // Box<ProductStore> -> ProductStore
-            .get(id)
+            .get(merchant_id , id)
     })
 }
 
 #[ic_cdk::query]
-fn list_products() -> HashMap<String , Product> {
-    let principal = ic_cdk::caller();
-    ic_cdk::println!("{}", principal);
+fn list_products(merchant_id : String) -> Option<ProductList> {
+    // let principal = ic_cdk::caller();
+    // ic_cdk::println!("{}", principal);
     STATE.with(|state| {
-        let mut state = state.borrow_mut();
-        state.products.as_mut().get_all().unwrap_or(HashMap::new())
+        state
+            .borrow()
+            .products
+            .as_ref()
+            .get_all(merchant_id)
     })
 }
 
@@ -54,13 +57,13 @@ fn update_product(item : Product){
 }
 
 #[ic_cdk::update]
-fn remove_product(id : String) -> Option<Product> {
+fn remove_product(merchant_id : String , id : String) -> Option<Product> {
     STATE.with(|state| {
         state
             .borrow_mut() // RefCell -> State
             .products
             .as_mut() // Box<ProductStore> -> ProductStore
-            .delete(id)
+            .delete(merchant_id , id)
     })
 }
 

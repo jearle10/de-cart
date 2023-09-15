@@ -8,6 +8,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use merchant::types::Merchant;
 use product::types::Product;
+use state::ProductList;
 use ic_cdk;
 use ic_cdk::export_candid;
 
