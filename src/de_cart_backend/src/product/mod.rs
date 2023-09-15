@@ -39,6 +39,18 @@ fn list_products() -> HashMap<String , Product> {
     })
 }
 
+
+#[ic_cdk::update]
+fn update_product(item : Product){
+    STATE.with(|state| {
+        state
+            .borrow_mut() // RefCell -> State
+            .products
+            .as_mut() // Box<ProductStore> -> ProductStore
+            .update(item);
+    });
+}
+
 #[ic_cdk::update]
 fn remove_product(id : String) -> Option<Product> {
     STATE.with(|state| {

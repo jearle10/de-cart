@@ -2,6 +2,7 @@ use crate::state::Store;
 use std::collections::HashMap;
 use std::io::Error;
 use candid::CandidType;
+use crate::product;
 use crate::product::types::Product;
 
 
@@ -33,8 +34,14 @@ impl Store<Product> for ProductStore {
         Ok(self.products.clone())
     }
 
-    fn update(&self, id: String, item: Error) {
-        ic_cdk::println!("updated product");
+    fn update(&mut self, item: Product) -> Option<Product> {
+        if self.products.contains_key(&item.sku ){
+            // Update the existing product
+            self.products.insert(item.sku.clone() , item.clone());
+            Some(item)
+        } else {
+            None
+        }
     }
 
     fn delete(&mut self, id: String) -> Option<Product> {
