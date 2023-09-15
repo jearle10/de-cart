@@ -5,7 +5,18 @@ use candid::CandidType;
 use crate::product;
 use crate::product::types::Product;
 
+/*
+Need to update the product store such that products are
+grouped by Merchant (use the Principal of merchant to group)
 
+When a call to the canister is made - retrieve the Principle making the call
+/ or get some unique identity
+
+New structure:
+ProductStore -> HashMap<Principal, ProductList>
+ProductList -> HashMap<String, Product>
+
+*/
 
 /* Product store data structure */
 #[derive(Debug, CandidType)]
