@@ -23,32 +23,10 @@ pub struct ProductStore {
     store: HashMap<String , ProductList>
 }
 
-// impl Default for ProductStore {
-//     fn default() -> Self {
-//         Self {
-//             store: Default::default(),
-//         }
-//     }
-// }
-
 /* Product list structure */
 #[derive(Debug, Clone, Default, CandidType)]
 pub struct ProductList {
-    pub products: HashMap<String , Product>
-}
-
-// impl Default for ProductList {
-//     fn default() -> Self {
-//         Self {
-//             products : HashMap::new()
-//         }
-//     }
-// }
-
-impl ProductList {
-    fn products(self)-> HashMap<String, Product> {
-        self.products
-    }
+    pub (crate) products: HashMap<String , Product>
 }
 
 impl Store<Product, ProductList> for ProductStore {
