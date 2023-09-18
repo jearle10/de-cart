@@ -1,5 +1,5 @@
 {
-  "name": "rust_hello_frontend",
+  "name": "de_cart_ui",
   "version": "0.2.0",
   "description": "Internet Computer starter application",
   "keywords": [
@@ -14,7 +14,7 @@
     "start": "webpack serve --mode development --env development",
     "deploy:local": "dfx deploy --network=local",
     "deploy:ic": "dfx deploy --network=ic",
-    "generate": "dfx generate de_cart_backend"
+    "generate": "dfx generate de_cart_contract"
   },
   "dependencies": {
     "@dfinity/agent": "^0.15.6",

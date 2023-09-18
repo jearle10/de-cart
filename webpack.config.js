@@ -7,7 +7,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-const frontendDirectory = "rust_hello_frontend";
+const frontendDirectory = "de_cart_ui";
 
 const frontend_entry = path.join("src", frontendDirectory, "src", "index.html");
 

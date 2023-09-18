@@ -1,4 +1,4 @@
-import { rust_hello_backend } from "../../declarations/rust_hello_backend";
+import { de_cart_contract } from "../../declarations/de_cart_contract";
 
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -9,11 +9,11 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   button.setAttribute("disabled", true);
 
   // Interact with foo actor, calling the greet method
-  const greeting = await rust_hello_backend.greet(name);
+  // const greeting = await de_cart_contract.
 
   button.removeAttribute("disabled");
 
-  document.getElementById("greeting").innerText = greeting;
+  // document.getElementById("greeting").innerText = greeting;
 
   return false;
 });
