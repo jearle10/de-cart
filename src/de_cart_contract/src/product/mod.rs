@@ -24,6 +24,7 @@ fn add_product(item : Product) -> Option<Product>{
 fn get_product(merchant_id : String , id : String) -> Option<Product>{
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
+
     STATE.with(|state| {
         state
             .borrow() // RefCell -> State
