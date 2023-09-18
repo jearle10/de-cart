@@ -1,4 +1,4 @@
 [workspace]
 members = [
-    "src/de_cart_backend",
+    "src/de_cart_contract",
 ]

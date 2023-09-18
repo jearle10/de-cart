@@ -1,0 +1,16 @@
+type Product = record {
+  sku : text;
+  merchant_id : text;
+  image_url : text;
+  name : text;
+  description : text;
+  price : nat;
+};
+type ProductList = record { products : vec record { text; Product } };
+service : {
+  add_product : (Product) -> (opt Product);
+  get_product : (text, text) -> (opt Product) query;
+  list_products : (text) -> (opt ProductList) query;
+  remove_product : (text, text) -> (opt Product);
+  update_product : (Product) -> ();
+}
