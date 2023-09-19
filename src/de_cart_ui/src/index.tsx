@@ -1,6 +1,7 @@
 import { de_cart_contract } from "../../declarations/de_cart_contract";
 import * as React from "react";
 import { render } from "react-dom";
+import '../assets/main.css';
 
 const MyHello = () => {
   const [name, setName] = React.useState('');
@@ -12,7 +13,7 @@ const MyHello = () => {
 
   return (
       <div style={{ "fontSize": "30px" }}>
-        <div style={{ "backgroundColor": "yellow" }}>
+        <div className="bg-black">
           <p>Greetings, from DFINITY!</p>
           <p>
             {" "}

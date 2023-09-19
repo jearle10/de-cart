@@ -48,6 +48,11 @@ module.exports = {
    rules: [
      { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
      // { test: /\.css$/, use: ['style-loader','css-loader'] }
+     {
+       test: /\.css$/i,
+       include: path.resolve(__dirname, 'src'),
+       use: ['style-loader', 'css-loader', 'postcss-loader'],
+     },
    ]
   },
   plugins: [
