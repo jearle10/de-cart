@@ -1,3 +1,35 @@
+type Cart = record {
+  id : text;
+  merchant_id : text;
+  user_id : text;
+  products : vec Product;
+};
+type Customer = record {
+  id : text;
+  balance : text;
+  name : text;
+  email : text;
+  address : text;
+};
+type Marketplace = record {
+  carts : vec record { text; Cart };
+  orders : vec record { text; Order };
+  merchants : vec record { text; Merchant };
+  products : vec record { text; Product };
+  customers : vec record { text; Customer };
+};
+type Merchant = record { id : nat; name : text; email : text };
+type Order = record {
+  id : text;
+  status : text;
+  merchant_id : text;
+  customer_id : text;
+  tracking_number : text;
+  address : text;
+  carrier : text;
+  products : vec text;
+  amount : text;
+};
 type Product = record {
   sku : text;
   merchant_id : text;
@@ -6,11 +38,4 @@ type Product = record {
   description : text;
   price : nat;
 };
-type ProductList = record { products : vec record { text; Product } };
-service : {
-  add_product : (Product) -> (opt Product);
-  get_product : (text, text) -> (opt Product) query;
-  list_products : (text) -> (opt ProductList) query;
-  remove_product : (text, text) -> (opt Product);
-  update_product : (Product) -> ();
-}
+service : { test : () -> (Marketplace) query }
