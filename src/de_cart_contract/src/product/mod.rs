@@ -1,79 +1,75 @@
-mod types;
-pub use types::*;
+use candid::{ Deserialize, CandidType };
+use std::collections::HashMap;
+#[derive(Clone, Debug, Deserialize, CandidType)]
+pub struct Product {
+    pub (crate) sku: String,
+    pub (crate) merchant_id : String,
+    pub (crate) product_id : String,
+    pub (crate) name: String,
+    pub (crate) price: candid::Nat,
+    pub (crate) description: String,
+    pub (crate) image_url: String
+}
 
-// use crate::{api, product};
-// use crate::merchant::types::Merchant;
-// use product::types::Product;
-// use crate::state::{ProductList, State};
+impl Default for Product {
+    fn default() -> Self {
+        Product {
+            sku: "default".to_string(),
+            product_id: "default_Product".to_string(),
+            name: "".to_string(),
+            price: Default::default(),
+            description: "".to_string(),
+            image_url: "".to_string(),
+            merchant_id: "".to_string(),
+        }
+    }
+}
 
-
-// #[ic_cdk::update]
-// fn add_product(item : Product) -> Option<Product>{
-//     STATE.with(|state| {
-//         state
-//             .borrow_mut() // RefCell -> State
-//             .products
-//             .as_mut() // Box<ProductStore> -> ProductStore
-//             .add(item)
-//     })
-// }
-
-// #[ic_cdk::query]
-// fn get_product(merchant_id : String , id : String) -> Option<Product>{
-//     let principle = ic_cdk::caller();
-//     ic_cdk::println!("{}", principle);
-
-//     STATE.with(|state| {
-//         state
-//             .borrow() // RefCell -> State
-//             .products
-//             .as_ref() // Box<ProductStore> -> ProductStore
-//             .get(merchant_id , id)
-//     })
-// }
-
-// #[ic_cdk::query]
-// fn list_products(merchant_id : String) -> Option<ProductList> {
-//     // let principal = ic_cdk::caller();
-//     // ic_cdk::println!("{}", principal);
-//     STATE.with(|state| {
-//         state
-//             .borrow()
-//             .products
-//             .as_ref()
-//             .get_all(merchant_id)
-//     })
-// }
+#[derive(Deserialize, Debug, CandidType, Default, Clone)]
+pub struct ProductStore {
+    pub (crate) products : HashMap<String, HashMap<String, Product>>
+}
 
 
-// #[ic_cdk::update]
-// fn update_product(item : Product){
-//     STATE.with(|state| {
-//         state
-//             .borrow_mut() // RefCell -> State
-//             .products
-//             .as_mut() // Box<ProductStore> -> ProductStore
-//             .update(item);
-//     });
-// }
+impl ProductStore {
+    pub fn new() -> Self {
+        Self {
+            products : HashMap::new()
+        }
+    }
+}
 
-// #[ic_cdk::update]
-// fn remove_product(merchant_id : String , id : String) -> Option<Product> {
-//     STATE.with(|state| {
-//         state
-//             .borrow_mut() // RefCell -> State
-//             .products
-//             .as_mut() // Box<ProductStore> -> ProductStore
-//             .delete(merchant_id , id)
-//     })
-// }
 
-// // #[ic_cdk::update]
-// async fn import_products(
-//     access_token : String,
-//     host : String
-// ) -> String {
-//     api::Shopify::get_all_products(access_token, host).await;
-//     // ic_cdk::println!("Testing printing logs");
-//     format!("Fetched cscart products")
-// }
+impl ProductStore {
+    pub fn get(&self, merchant_id : String , sku : String) -> Option<Product> {
+        let products = self.products.get(&merchant_id).unwrap().clone();
+        products.get(&sku).cloned()
+    }
+
+    pub fn add(&mut self, merchant_id : String , product : Product) -> Option<Product> {
+        let merchant_products = self.products.get_mut(&merchant_id).unwrap();
+        merchant_products.insert(product.sku.to_string(), product.clone());
+        Some(product)
+    }
+
+    pub fn get_all(&self, merchant_id : String) -> ProductStore {
+        // let products : Vec<Product> = merchant_products.values().cloned().collect();
+        // products
+        self.clone()
+    }
+
+    pub fn update(&mut self,merchant_id : String,  product : Product) -> Option<Product> {
+        let merchant_products = self.products.get_mut(&merchant_id).unwrap();
+        merchant_products.insert(product.sku.to_string(), product.clone());
+        Some(product)
+    }
+
+    pub fn delete(&mut self, merchant_id : String, sku : String) -> Option<Product> {
+        let merchant_products = self.products.get_mut(&merchant_id).unwrap();
+        merchant_products.remove(&sku)
+    }
+
+    pub fn add_merchant(&mut self , merchant_id : String){
+        self.products.insert(merchant_id.to_string(), HashMap::new());
+    }
+}

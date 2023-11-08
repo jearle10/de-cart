@@ -1,0 +1,63 @@
+{
+  "products": [
+    [
+      "h6f6h-xeej7-scpyt-54gm4-qpi6v-sgkkz-a3ob4-5kyvz-zsn7l-cchvg-uae",
+      [
+        [
+          "hello_world",
+          {
+            "sku": "hello_world",
+            "merchant_id": "",
+            "product_id": "default_Product",
+            "image_url": "",
+            "name": "",
+            "description": "",
+            "price": "0"
+          }
+        ],
+        [
+          "nice_one",
+          {
+            "sku": "nice_one",
+            "merchant_id": "",
+            "product_id": "default_Product",
+            "image_url": "",
+            "name": "",
+            "description": "",
+            "price": "0"
+          }
+        ]
+      ]
+    ],
+    [
+      "2vxsx-fae",
+      [
+        [
+          "one",
+          {
+            "sku": "one",
+            "merchant_id": "",
+            "product_id": "default_Product",
+            "image_url": "",
+            "name": "",
+            "description": "",
+            "price": "0"
+          }
+        ],
+        [
+          "two",
+          {
+            "sku": "two",
+            "merchant_id": "",
+            "product_id": "default_Product",
+            "image_url": "",
+            "name": "",
+            "description": "",
+            "price": "0"
+          }
+        ]
+      ]
+    ],
+    ["bbfoa-qlmgl-d7k67-q5oib-6ebxp-jpd7q-sw4hy-vywq5-nmlpo-osgd4-lae", []]
+  ]
+}
