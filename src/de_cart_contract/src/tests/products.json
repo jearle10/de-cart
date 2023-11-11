@@ -1,12 +1,12 @@
 {
   "products": [
     [
-      "h6f6h-xeej7-scpyt-54gm4-qpi6v-sgkkz-a3ob4-5kyvz-zsn7l-cchvg-uae",
+      "2vxsx-fae",
       [
         [
-          "hello_world",
+          "three",
           {
-            "sku": "hello_world",
+            "sku": "three",
             "merchant_id": "",
             "product_id": "default_Product",
             "image_url": "",
@@ -16,31 +16,26 @@
           }
         ],
         [
-          "nice_one",
+          "one_updated",
           {
-            "sku": "nice_one",
+            "sku": "one_updated",
             "merchant_id": "",
-            "product_id": "default_Product",
+            "product_id": "",
             "image_url": "",
             "name": "",
             "description": "",
             "price": "0"
           }
-        ]
-      ]
-    ],
-    [
-      "2vxsx-fae",
-      [
+        ],
         [
           "one",
           {
             "sku": "one",
-            "merchant_id": "",
-            "product_id": "default_Product",
+            "merchant_id": "2vxsx-fae",
+            "product_id": "",
             "image_url": "",
             "name": "",
-            "description": "",
+            "description": "My first description",
             "price": "0"
           }
         ],
@@ -57,7 +52,6 @@
           }
         ]
       ]
-    ],
-    ["bbfoa-qlmgl-d7k67-q5oib-6ebxp-jpd7q-sw4hy-vywq5-nmlpo-osgd4-lae", []]
+    ]
   ]
 }

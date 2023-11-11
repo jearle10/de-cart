@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 use crate::customer;
 use crate::customer::Customer;
-use crate::product::{self , Product};
+use crate::product::{ self };
 use crate::merchant;
 use crate::order;
 use crate::cart;
@@ -85,7 +85,7 @@ fn add_product(sku : String) -> Option<product::Product>{
 }
 
 #[ic_cdk::update]
-fn update_product(merchant_id :String, product: Product) -> Option<product::Product>{
+fn update_product(merchant_id :String, product: product::Product) -> Option<product::Product>{
 
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
