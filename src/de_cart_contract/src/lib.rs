@@ -8,6 +8,11 @@ mod state;
 // mod api;
 
 use marketplace::Marketplace;
+use customer::*;
+use merchant::*;
+use order::Order;
+use product::*;
+
 use std::cell::RefCell;
 use ic_cdk;
 use ic_cdk::export_candid;

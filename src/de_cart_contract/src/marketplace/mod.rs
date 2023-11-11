@@ -1,32 +1,49 @@
 use candid::{ Deserialize, CandidType };
 use std::collections::HashMap;
 
-use crate::customer;
-use crate::customer::Customer;
-use crate::product::{ self };
-use crate::merchant;
-use crate::order;
-use crate::cart;
+use crate::customer::*;
+use crate::product::*;
+use crate::merchant::*;
+use crate::order::*;
+use crate::cart::*;
 use crate::state::Store;
 
 use super::STATE;
 
+// Global state of contract 
 #[derive(Deserialize, CandidType)]
 pub struct Marketplace {
-    customers : customer::CustomerStore,
-    merchants : merchant::MerchantStore,
-    orders : HashMap<String, order::Order>,
-    pub (crate) products: product::ProductStore,
-    carts : HashMap<String , cart::Cart>
+    customers : CustomerStore,
+    merchants : MerchantStore,
+    orders : HashMap<String, Order>,
+    pub (crate) products: ProductStore,
+    carts : HashMap<String , Cart>
 }
 
-#[ic_cdk::query]
-fn get_customer(id : String) -> Option<customer::Customer>{
-    STATE.take().customers.get(id).cloned()
+impl Default for Marketplace {
+    fn default() -> Self {
+        Self {
+            customers : CustomerStore::new(),
+            merchants: MerchantStore::new(),
+            orders: HashMap::new(),
+            products: ProductStore::new(),
+            carts: HashMap::new(),
+        }
+    }
 }
+
+/* 
+All the services provided by the marketplace
+- Merchants 
+- Customers
+- Orders
+- Baskets 
+*/
+
+/* ============== Customer managment ================= */ 
 
 #[ic_cdk::update]
-fn register_customer() -> Option<customer::Customer> {
+fn register_customer() -> Option<Customer> {
     
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
@@ -48,16 +65,26 @@ fn register_customer() -> Option<customer::Customer> {
 }
 
 
+#[ic_cdk::query]
+fn get_customer(id : String) -> Option<Customer>{
+    STATE.take().customers.get(id).cloned()
+}
+
+// TODO - add methods for deleting and updating customers
+
+
+/* ============== Merchant managment ================= */ 
+
 #[ic_cdk::update]
-fn register_merchant() -> Option<merchant::Merchant> {
+fn register_merchant() -> Option<Merchant> {
     let mut marketplace = STATE.take();
 
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
 
-    let new_merchant = merchant::Merchant {
+    let new_merchant = Merchant {
         id : principle.to_text(),
-        ..merchant::Merchant::default()
+        ..Merchant::default()
     };
 
     marketplace.merchants.add(new_merchant.clone());
@@ -68,11 +95,12 @@ fn register_merchant() -> Option<merchant::Merchant> {
 }
 
 
+/* ============== Product managment ================= */
 #[ic_cdk::update]
-fn add_product(sku : String) -> Option<product::Product>{
-    let new_product = product::Product {
+fn add_product(sku : String) -> Option<Product>{
+    let new_product = Product {
         sku : sku,
-        ..product::Product::default()
+        ..Product::default()
     };
 
     let principle = ic_cdk::caller();
@@ -85,7 +113,7 @@ fn add_product(sku : String) -> Option<product::Product>{
 }
 
 #[ic_cdk::update]
-fn update_product(merchant_id :String, product: product::Product) -> Option<product::Product>{
+fn update_product(merchant_id :String, product: Product) -> Option<Product>{
 
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
@@ -109,7 +137,7 @@ fn delete_product(merchant_id :String, sku : String) -> Option<String>{
 }
 
 #[ic_cdk::update]
-fn get_all_products() -> product::ProductStore{
+fn get_all_products() -> ProductStore{
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
     
@@ -123,16 +151,13 @@ fn get_all_products() -> product::ProductStore{
 
 
 
+/* ============== Basket managment ================= */
 
 
-impl Default for Marketplace {
-    fn default() -> Self {
-        Self {
-            customers : customer::CustomerStore::new(),
-            merchants: merchant::MerchantStore::new(),
-            orders: HashMap::new(),
-            products: product::ProductStore::new(),
-            carts: HashMap::new(),
-        }
-    }
-}
+
+
+
+
+
+
+/* ============== Order managment ================= */
