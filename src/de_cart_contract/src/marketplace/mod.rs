@@ -17,7 +17,7 @@ pub struct Marketplace {
     merchants : MerchantStore,
     orders : HashMap<String, Order>,
     pub (crate) products: ProductStore,
-    carts : HashMap<String , Cart>
+    carts : CartStore
 }
 
 impl Default for Marketplace {
@@ -27,7 +27,7 @@ impl Default for Marketplace {
             merchants: MerchantStore::new(),
             orders: HashMap::new(),
             products: ProductStore::new(),
-            carts: HashMap::new(),
+            carts: CartStore::new()
         }
     }
 }
@@ -148,16 +148,34 @@ fn get_all_products() -> ProductStore{
 }
 
 
+/* ============== Cart managment ================= */
 
 
+#[ic_cdk::update]
+fn add_cart(cart : Cart) -> Option<Cart> {
+    let principle =  ic_cdk::caller();
+    let mut marketplace = STATE.take();
+    marketplace.carts.add(cart.clone());
+    STATE.set(marketplace);
+    Some(cart)
+}
 
-/* ============== Basket managment ================= */
 
+#[ic_cdk::update]
+fn update_cart(cart : Cart) -> Option<Cart> {
+    let principle =  ic_cdk::caller();
+    let mut marketplace = STATE.take();
+    marketplace.carts.add(cart.clone());
+    STATE.set(marketplace);
+    Some(cart)
+}
 
-
-
-
-
+#[ic_cdk::update]
+fn get_cart() -> Option<Cart> {
+    let principle =  ic_cdk::caller();
+    let marketplace = STATE.take();
+    marketplace.carts.get(principle.to_text()).cloned()
+}
 
 
 /* ============== Order managment ================= */

@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+
 mod customer;
 mod merchant;
 mod marketplace;
@@ -12,7 +14,7 @@ use customer::*;
 use merchant::*;
 use order::Order;
 use product::*;
-
+use cart::*;
 use std::cell::RefCell;
 use ic_cdk;
 use ic_cdk::export_candid;

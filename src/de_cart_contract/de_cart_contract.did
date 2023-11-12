@@ -1,3 +1,10 @@
+type Cart = record {
+  id : text;
+  merchant_id : text;
+  user_id : text;
+  items : vec CartItem;
+};
+type CartItem = record { qty : nat32; product_id : text };
 type Customer = record {
   id : text;
   balance : text;
@@ -19,11 +26,14 @@ type ProductStore = record {
   products : vec record { text; vec record { text; Product } };
 };
 service : {
+  add_cart : (Cart) -> (opt Cart);
   add_product : (text) -> (opt Product);
   delete_product : (text, text) -> (opt text);
   get_all_products : () -> (ProductStore);
+  get_cart : () -> (opt Cart);
   get_customer : (text) -> (opt Customer) query;
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
+  update_cart : (Cart) -> (opt Cart);
   update_product : (text, Product) -> (opt Product);
 }

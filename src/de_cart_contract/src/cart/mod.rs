@@ -6,7 +6,7 @@ use crate::state::Store;
 
 type CustomerId = String;
 
-#[derive(Deserialize, CandidType, Default)]
+#[derive(Deserialize, CandidType, Default, Clone)]
 pub struct Cart {
     id : String ,
     user_id : String ,
@@ -14,12 +14,12 @@ pub struct Cart {
     items : Vec<CartItem>
 }
 
-#[derive(Deserialize, CandidType, Default)]
+#[derive(Deserialize, CandidType, Default, Clone)]
 struct CartItem {
     product_id: String,
     qty : u32
 }
-
+#[derive(Deserialize, CandidType, Default, Clone)]
 pub struct CartStore {
     pub (crate) carts : HashMap<String, Cart>
 }
@@ -38,15 +38,15 @@ impl Store <Cart> for CartStore {
     }
 
     fn add(&mut self, cart : Cart) -> Option<Cart> {
-        self.carts.insert(cart.merchant_id.clone(), cart)
+        self.carts.insert(cart.id.clone(), cart)
     }
 
     fn get_all(&self) -> Vec<Cart> {
         vec![]
     }
 
-    fn update(&mut self, item : Cart) -> Option<Cart> {
-        None
+    fn update(&mut self, cart : Cart) -> Option<Cart> {
+        self.add(cart)
     }
 
     fn delete(&mut self , customer_id : String) -> Option<Cart> {

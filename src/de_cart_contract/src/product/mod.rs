@@ -1,5 +1,6 @@
 use candid::{ Deserialize, CandidType };
 use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, CandidType)]
 pub struct Product {
