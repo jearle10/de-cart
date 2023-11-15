@@ -34,6 +34,7 @@ service : {
   get_customer : (text) -> (opt Customer) query;
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
+  test : () -> (text) query;
   update_cart : (Cart) -> (opt Cart);
   update_product : (text, Product) -> (opt Product);
 }

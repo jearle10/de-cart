@@ -45,15 +45,15 @@ module.exports = {
   // modules and CSS as described in the "Adding a stylesheet"
   // tutorial, uncomment the following lines:
   module: {
-   rules: [
-     { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-     // { test: /\.css$/, use: ['style-loader','css-loader'] }
-     {
-       test: /\.css$/i,
-       include: path.resolve(__dirname, 'src'),
-       use: ['style-loader', 'css-loader', 'postcss-loader'],
-     },
-   ]
+    rules: [
+      { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
+      // { test: /\.css$/, use: ['style-loader','css-loader'] }
+      {
+        test: /\.css$/i,
+        include: path.resolve(__dirname, "src"),
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -84,6 +84,7 @@ module.exports = {
   // proxy /api to port 4943 during development.
   // if you edit dfx.json to define a project-specific local network, change the port to match.
   devServer: {
+    historyApiFallback: true,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:4943",

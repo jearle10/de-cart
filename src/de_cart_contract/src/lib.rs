@@ -33,10 +33,10 @@ thread_local! {
     // Define some sensible cansiter limits to ensure upgrades possible
 }
 
-// #[ic_cdk::query]
-// fn test() -> product::ProductStore {
-//     let marketplace = STATE.take();
-//     marketplace.products
-// }
+#[ic_cdk::query]
+fn test() -> String {
+    ic_cdk::println!("{}", ic_cdk::caller().to_text());
+    "Hello from de-cart canister".to_string()
+}
 
 export_candid!();
