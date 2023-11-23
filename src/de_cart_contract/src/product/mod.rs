@@ -1,6 +1,7 @@
 use candid::{ Deserialize, CandidType };
 use std::collections::HashMap;
 use std::collections::BTreeMap;
+use std::collections::hash_map::Iter;
 
 #[derive(Clone, Debug, Deserialize, CandidType)]
 pub struct Product {
@@ -11,6 +12,19 @@ pub struct Product {
     pub (crate) price: candid::Nat,
     pub (crate) description: String,
     pub (crate) image_url: String
+}
+
+impl Product {
+    fn total_bytes(&self) -> usize {
+        let mut bytes = 0;
+        bytes += self.sku.len();
+        bytes += self.merchant_id.len();
+        bytes += self.product_id.len();
+        bytes += self.name.len();
+        bytes += self.description.len();
+        bytes += self.image_url.len();
+        bytes
+    }
 }
 
 impl Default for Product {
@@ -41,7 +55,7 @@ impl ProductStore {
         Self {
             products : HashMap::new()
         }
-    }
+    } 
 }
 
 
@@ -57,7 +71,7 @@ impl ProductStore {
         Some(product)
     }
 
-    pub fn get_all(&self, merchant_id : String) -> ProductStore {
+    pub fn get_all(&self, _merchant_id : String) -> ProductStore {
         // let products : Vec<Product> = merchant_products.values().cloned().collect();
         // products
         self.clone()
@@ -81,11 +95,47 @@ impl ProductStore {
     fn get_merchant_store(&self , merchant_id : String) -> Option<(&ProductId, &HashMap<ProductId, Product>)>{
         self.products.get_key_value(&merchant_id)
     }
+
+    pub (crate) fn total_bytes(&self) -> usize {
+        let mut total_bytes = 0;
+        let mut merchants: Iter<'_, String, HashMap<String, Product>> = self.products.iter();
+
+        loop {
+            let products: Option<(&String, &HashMap<String, Product>)> = merchants.next();
+            if products.is_none() {
+                break
+            }
+            let data: (&String, &HashMap<String , Product>)  = products.unwrap();
+            let (merchant_id , merchant_products) = data;
+            total_bytes += merchant_id.len();       // Add size of id
+
+            // Go through each product and call total_bytes
+            merchant_products.iter().for_each(
+                | (id, product)| total_bytes+= id.len() + product.total_bytes());
+        }   
+        total_bytes
+    }
+
+    pub (crate) fn total_products(&self) -> String {
+        let mut sum = 0;
+        let mut merchants: Iter<'_, String, HashMap<String, Product>> = self.products.iter();
+
+        loop {
+            if let Some(data) = merchants.next(){
+                let products = data.1;
+                products.values().for_each(|product| sum += 1 )
+            } 
+            break
+        }
+        sum.to_string()
+    }
+
 }
 
 #[cfg(test)]
 mod tests {
 
+    use ic_cdk::println;
     use crate::product;
 
     use super::*;
@@ -166,6 +216,59 @@ mod tests {
         let product = store.get(merchant_id, "my_sku".to_string());
         assert_eq!(true ,product.is_none());
     }
+
+    #[test]
+    fn it_calculates_bytes_of_product(){
+
+        let product = product::Product {
+            sku: "1".to_string(),
+            merchant_id: "1".to_string(),
+            product_id: "1".to_string(),
+            name: "1".to_string(),
+            price: candid::Nat::from(100),
+            description: "1".to_string(),
+            image_url: "1".to_string(),
+        };
+
+        let size = product.total_bytes();
+        assert_eq!(size , 6)
+    }
+    
+    #[test]
+    fn it_calculates_bytes_of_product_store(){
+
+        let product1 = product::Product {
+            sku: "1".to_string(),
+            merchant_id: "1".to_string(),
+            product_id: "1".to_string(),
+            name: "1".to_string(),
+            price: candid::Nat::from(100),
+            description: "1".to_string(),
+            image_url: "1".to_string(),
+        };
+
+        let product2 = product::Product {
+            sku: "2".to_string(),
+            merchant_id: "2".to_string(),
+            product_id: "2".to_string(),
+            name: "1".to_string(),
+            price: candid::Nat::from(100),
+            description: "1".to_string(),
+            image_url: "1".to_string(),
+        };
+
+        let mut store = product::ProductStore::default();
+
+        store.add_merchant("1".to_string());        
+        store.add_merchant("2".to_string());   
+        store.add(product1.merchant_id.clone(), product1);
+        store.add(product2.merchant_id.clone(), product2);
+
+        
+        let product_storage = store.total_bytes();
+        assert_eq!(product_storage ,16)
+    }
+
 
 
 }

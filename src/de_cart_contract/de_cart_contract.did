@@ -12,7 +12,26 @@ type Customer = record {
   email : text;
   address : text;
 };
+type MarketplaceStats = record {
+  total : text;
+  carts : text;
+  orders : text;
+  merchants : text;
+  products : text;
+  customers : text;
+};
 type Merchant = record { id : text; name : text; email : text };
+type Order = record {
+  id : text;
+  status : text;
+  merchant_id : text;
+  customer_id : text;
+  tracking_number : text;
+  address : text;
+  items : vec CartItem;
+  carrier : text;
+  amount : text;
+};
 type Product = record {
   sku : text;
   merchant_id : text;
@@ -27,14 +46,15 @@ type ProductStore = record {
 };
 service : {
   add_cart : (Cart) -> (opt Cart);
-  add_product : (text) -> (opt Product);
+  add_order : (Order) -> (opt Order);
+  add_product : (Product) -> (opt Product);
   delete_product : (text, text) -> (opt text);
   get_all_products : () -> (ProductStore);
   get_cart : () -> (opt Cart);
   get_customer : (text) -> (opt Customer) query;
+  marketplace_stats : () -> (MarketplaceStats) query;
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
-  test : () -> (text) query;
   update_cart : (Cart) -> (opt Cart);
   update_product : (text, Product) -> (opt Product);
 }

@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-
 use candid::{ Deserialize, CandidType };
 use crate::product;
 use crate::state::Store;
@@ -14,10 +13,22 @@ pub struct Cart {
     items : Vec<CartItem>
 }
 
+impl Cart {
+
+    fn total_bytes(&self) -> usize {
+        let mut bytes = 0;
+        bytes += self.id.len();
+        bytes += self.user_id.len();
+        bytes += self.merchant_id.len();
+        self.items.iter().for_each(|item | bytes += item.product_id.len() + u32::BITS as usize);
+        bytes
+    }
+}
+
 #[derive(Deserialize, CandidType, Default, Clone)]
-struct CartItem {
-    product_id: String,
-    qty : u32
+pub (crate) struct CartItem {
+    pub (crate) product_id: String,
+    pub (crate) qty : u32
 }
 #[derive(Deserialize, CandidType, Default, Clone)]
 pub struct CartStore {
@@ -55,18 +66,36 @@ impl Store <Cart> for CartStore {
 }
 
 
+impl CartStore {
+    pub (crate) fn total_bytes(&self) -> usize {
+        let mut total_bytes = 0;
+        self.carts
+            .iter()
+            .for_each(|(id , cart)| total_bytes += id.len() + cart.total_bytes());
+        total_bytes
+    }
+
+    pub (crate) fn total_carts(&self) -> String {
+        self.carts.iter().len().to_string()
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
+    use crate::cart;
 
     use super::*;
+    // extern crate test;
+    // use test::Bencher;
+
 
     #[test]
     fn it_adds_a_cart(){  
         
         let mut store = CartStore::new();
         let cart = Cart {
-            merchant_id : "one".to_string(),
+            id : "one".to_string(),
             ..Cart::default()
         };
 
@@ -82,15 +111,16 @@ mod tests {
         
         let mut store = CartStore::new();
         let cart = Cart {
-            merchant_id : "one".to_string(),
+            id : "one".to_string(),
             ..Cart::default()
         };
         store.add(cart);
 
         let cart = store.get("one".to_string()).unwrap();
 
-        assert_eq!("one".to_string(), cart.merchant_id)
+        assert_eq!("one".to_string(), cart.id)
     }
+
 
     #[test]
     fn it_deletes_a_cart(){  
@@ -108,4 +138,57 @@ mod tests {
         assert_eq!(true, cart.is_none())
     }
 
+    
+    
+    #[test]
+    fn it_calculates_bytes_of_cart(){
+        
+        let cart1 = Cart {
+            id: "1".to_string(),
+            user_id: "1".to_string(),
+            merchant_id: "1".to_string(),
+            items: vec![
+                CartItem { product_id: "1".to_string(), qty: 4 },
+                CartItem { product_id: "2".to_string(), qty: 4 }
+                ]
+            };
+                            
+            let cart_storage = cart1.total_bytes();
+            
+            assert_eq!(cart_storage ,69)
+        }
+        
+        #[test]
+        fn it_calculates_bytes_of_cart_store(){
+    
+            let cart1 = Cart {
+                id: "1".to_string(),
+                user_id: "1".to_string(),
+                merchant_id: "1".to_string(),
+                items: vec![
+                    CartItem { product_id: "1".to_string(), qty: 4 },
+                    CartItem { product_id: "2".to_string(), qty: 4 }
+                    ]
+            };
+    
+            let cart2 = Cart {
+                id: "2".to_string(),
+                user_id: "2".to_string(),
+                merchant_id: "2".to_string(),
+                items: vec![
+                    CartItem { product_id: "1".to_string(), qty: 4 },
+                    CartItem { product_id: "2".to_string(), qty: 4 }
+                    ]
+            };
+    
+            let mut store = cart::CartStore::default();
+    
+            store.add(cart1);
+            store.add(cart2);
+
+            
+            let cart_store_storage = store.total_bytes();
+    
+            assert_eq!(cart_store_storage ,140)
+        }
 }

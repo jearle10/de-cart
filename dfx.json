@@ -4,19 +4,7 @@
       "candid": "src/de_cart_contract/de_cart_contract.did",
       "package": "de_cart_contract",
       "type": "rust"
-    },
-    "de_cart_ui" : {
-      "dependencies" : ["de_cart_contract"],
-      "frontend" : {
-        "entrypoint": "src/de_cart_contract/src/index.html"
-      },
-      "source" : [
-        "src/de_cart_ui/assets",
-        "dist/de_cart_ui/"
-      ],
-      "type": "assets"
     }
-
   },
   "defaults": {
     "build": {

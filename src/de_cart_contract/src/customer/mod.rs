@@ -12,6 +12,21 @@ pub struct Customer {
     address: String
 }
 
+
+impl Customer {
+
+    fn total_bytes(&self) -> usize {
+        let mut bytes = 0;
+        bytes += self.id.len();
+        bytes += self.email.len();
+        bytes += self.name.len();
+        bytes += self.balance.len();
+        bytes += self.address.len();
+        bytes
+    }
+}
+
+
 #[derive(Deserialize, Debug, CandidType, Default, Clone)]
 pub struct CustomerStore {
     pub customers : HashMap<String, Customer>
@@ -49,6 +64,19 @@ impl Store<Customer> for CustomerStore {
     }
 }
 
+impl CustomerStore {
+    pub (crate) fn total_bytes(&self) -> usize {
+        let mut total_bytes = 0;
+        self.customers
+            .iter()
+            .for_each(|(id , customer)| total_bytes += id.len() + customer.total_bytes());
+        total_bytes
+    }
+
+    pub (crate) fn total_customer(&self) -> String {
+        self.customers.iter().len().to_string()
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -118,4 +146,50 @@ mod tests {
 
         assert_eq!(store.customers.get("2vxsx-fae").unwrap().email, "jian@email.com".to_string());
     }
+
+    #[test]
+    fn it_calculates_bytes_of_customer(){
+        
+        let customer = Customer {
+            id : "1".to_string() ,
+            email : "1".to_string() ,
+            name : "1".to_string(),
+            balance : "1".to_string(),
+            address: "1".to_string()
+        };
+        
+        let customer_storage = customer.total_bytes();
+        assert_eq!(customer_storage , 5)
+    }
+
+    #[test]
+    fn it_calculates_bytes_of_customer_store(){
+
+        let customer1 = Customer {
+            id : "1".to_string() ,
+            email : "1".to_string() ,
+            name : "1".to_string(),
+            balance : "1".to_string(),
+            address: "1".to_string()
+        };
+
+        let customer2 = Customer {
+            id : "2".to_string() ,
+            email : "2".to_string() ,
+            name : "2".to_string(),
+            balance : "2".to_string(),
+            address: "2".to_string()
+        };
+
+
+        let mut store = CustomerStore::default();
+
+        store.add(customer1);
+        store.add(customer2);
+
+        let customer_store_storage = store.total_bytes();
+
+        assert_eq!(customer_store_storage , 12)
+    }
+
 }

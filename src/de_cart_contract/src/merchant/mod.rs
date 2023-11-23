@@ -12,6 +12,18 @@ pub struct Merchant {
     pub (crate) email : String,
 }
 
+impl Merchant {
+
+    fn total_bytes(&self) -> usize {
+        let mut bytes = 0;
+        bytes += self.id.len();
+        bytes += self.name.len();
+        bytes += self.email.len();
+        bytes
+    }
+}
+
+
 #[derive(Deserialize, Debug, CandidType, Default, Clone)]
 pub struct MerchantStore {
     pub merchants : HashMap<MerchantId, Merchant>
@@ -46,6 +58,20 @@ impl Store<Merchant> for MerchantStore {
 
     fn delete(&mut self , merchant_id : MerchantId) -> Option<Merchant> {
         self.merchants.remove(merchant_id.as_str())
+    }
+}
+
+impl MerchantStore {
+    pub (crate) fn total_bytes(&self) -> usize {
+        let mut total_bytes = 0;
+        self.merchants
+            .iter()
+            .for_each(|(id , merchant)| total_bytes += id.len() + merchant.total_bytes());
+        total_bytes
+    }
+
+    pub (crate) fn total_merchants(&self) -> String {
+        self.merchants.iter().len().to_string()
     }
 }
 
@@ -166,5 +192,42 @@ mod tests {
         let length = merchants.len();
 
         assert_eq!(length, 0);
+    }
+
+    #[test]
+    fn it_calculates_bytes_of_merchant(){
+        
+        let merchant = Merchant { 
+            id: "1".to_string(), 
+            name: "1".to_string(), 
+            email: "1".to_string() 
+        };
+        
+        let merchant_storage = merchant.total_bytes();
+        assert_eq!(merchant_storage , 3)
+    }
+
+    #[test]
+    fn it_calculates_bytes_of_merchant_store(){
+
+        let merchant1 = Merchant { 
+            id: "1".to_string(), 
+            name: "1".to_string(), 
+            email: "1".to_string() 
+        };
+
+        let merchant2 = Merchant { 
+            id: "2".to_string(), 
+            name: "2".to_string(), 
+            email: "2".to_string() 
+        };
+
+        let mut store = MerchantStore::default();
+
+        store.add(merchant1);
+        store.add(merchant2);
+
+        let merchant_store_storage = store.total_bytes();
+        assert_eq!(merchant_store_storage , 8)
     }
 }

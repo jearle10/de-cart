@@ -13,11 +13,11 @@ use super::STATE;
 // Global state of contract 
 #[derive(Deserialize, CandidType)]
 pub struct Marketplace {
-    customers : CustomerStore,
-    merchants : MerchantStore,
-    orders : HashMap<String, Order>,
+    pub (crate) customers : CustomerStore,
+    pub (crate) merchants : MerchantStore,
+    pub (crate) orders : OrderStore,
     pub (crate) products: ProductStore,
-    carts : CartStore
+    pub (crate) carts : CartStore
 }
 
 impl Default for Marketplace {
@@ -25,7 +25,7 @@ impl Default for Marketplace {
         Self {
             customers : CustomerStore::new(),
             merchants: MerchantStore::new(),
-            orders: HashMap::new(),
+            orders: OrderStore::new(),
             products: ProductStore::new(),
             carts: CartStore::new()
         }
@@ -97,10 +97,15 @@ fn register_merchant() -> Option<Merchant> {
 
 /* ============== Product managment ================= */
 #[ic_cdk::update]
-fn add_product(sku : String) -> Option<Product>{
-    let new_product = Product {
-        sku : sku,
-        ..Product::default()
+fn add_product(product : Product) -> Option<Product>{
+    let new_product = Product { 
+        sku: product.sku, 
+        merchant_id: product.merchant_id, 
+        product_id: product.product_id, 
+        name: product.name, 
+        price: product.price, 
+        description: product.description, 
+        image_url: product.image_url 
     };
 
     let principle = ic_cdk::caller();
@@ -113,7 +118,7 @@ fn add_product(sku : String) -> Option<Product>{
 }
 
 #[ic_cdk::update]
-fn update_product(merchant_id :String, product: Product) -> Option<Product>{
+fn update_product(_merchant_id :String, product: Product) -> Option<Product>{
 
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
@@ -125,7 +130,7 @@ fn update_product(merchant_id :String, product: Product) -> Option<Product>{
 }
 
 #[ic_cdk::update]
-fn delete_product(merchant_id :String, sku : String) -> Option<String>{
+fn delete_product(_merchant_id :String, sku : String) -> Option<String>{
 
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
@@ -153,7 +158,7 @@ fn get_all_products() -> ProductStore{
 
 #[ic_cdk::update]
 fn add_cart(cart : Cart) -> Option<Cart> {
-    let principle =  ic_cdk::caller();
+    let _principle =  ic_cdk::caller();
     let mut marketplace = STATE.take();
     marketplace.carts.add(cart.clone());
     STATE.set(marketplace);
@@ -163,7 +168,7 @@ fn add_cart(cart : Cart) -> Option<Cart> {
 
 #[ic_cdk::update]
 fn update_cart(cart : Cart) -> Option<Cart> {
-    let principle =  ic_cdk::caller();
+    let _principle =  ic_cdk::caller();
     let mut marketplace = STATE.take();
     marketplace.carts.add(cart.clone());
     STATE.set(marketplace);
@@ -179,3 +184,12 @@ fn get_cart() -> Option<Cart> {
 
 
 /* ============== Order managment ================= */
+
+#[ic_cdk::update]
+fn add_order(order : Order) -> Option<Order> {
+    let _principle =  ic_cdk::caller();
+    let mut marketplace = STATE.take();
+    marketplace.orders.add(order.clone());
+    STATE.set(marketplace);
+    Some(order)
+}
