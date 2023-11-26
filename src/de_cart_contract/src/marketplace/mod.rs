@@ -41,10 +41,7 @@ All the services provided by the marketplace
 */
 
 /* ============== Customer managment ================= */ 
-
-#[ic_cdk::update]
-fn register_customer() -> Option<Customer> {
-    
+pub fn register_customer<T : Into<String>>(id : T) -> Option<Customer> {
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
 

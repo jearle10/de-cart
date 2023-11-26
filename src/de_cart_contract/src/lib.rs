@@ -3,7 +3,7 @@
 
 mod customer;
 mod merchant;
-mod marketplace;
+pub mod marketplace;
 mod order;
 mod product;
 mod cart;
@@ -38,6 +38,12 @@ thread_local! {
     // Define some sensible cansiter limits to ensure upgrades possible
 }
 
+pub mod testing {
+    pub fn hello(){
+        println!("hello");
+    }
+}
+
 #[derive(Deserialize, CandidType)]
 struct MarketplaceStats {
     total : String,
@@ -48,6 +54,12 @@ struct MarketplaceStats {
     orders : String
 }
 
+#[ic_cdk::update]
+fn register_customer()-> Option<Customer> {
+    let id = ic_cdk::api::caller().to_text();
+    ic_cdk::println!("{}", id);
+    marketplace::register_customer(id)
+}
 
 #[ic_cdk::query]
 fn marketplace_stats() -> MarketplaceStats {
