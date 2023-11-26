@@ -51,7 +51,6 @@ struct MarketplaceStats {
 #[ic_cdk::update]
 fn register_customer()-> Option<Customer> {
     let id = ic_cdk::api::caller().to_text();
-    ic_cdk::println!("{}", id);
     marketplace::register_customer(id)
 }
 

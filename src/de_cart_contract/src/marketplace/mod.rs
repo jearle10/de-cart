@@ -42,18 +42,15 @@ All the services provided by the marketplace
 
 /* ============== Customer managment ================= */ 
 pub fn register_customer(id : String) -> Option<Customer> {
-    let principle = ic_cdk::caller();
-    ic_cdk::println!("{}", principle);
-
     let mut marketplace = STATE.take();
 
     // Check if customer exists otherwise create one
-    let customer = if let Some(customer) = marketplace.customers.get(principle.to_text()) {
-        ic_cdk::println!("Customer :{:?} exists", customer);
+    let customer = if let Some(customer) = marketplace.customers.get(id.clone()) {
+        // ic_cdk::println!("Customer :{:?} exists", customer);
         Some(customer.clone())
     } else {
         let mut new_customer = Customer::default();
-        new_customer.id = principle.to_text();
+        new_customer.id = id;
         ic_cdk::println!("Created new customer :{:?}", new_customer);
         marketplace.customers.add(new_customer)
     };
