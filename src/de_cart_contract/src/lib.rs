@@ -38,12 +38,6 @@ thread_local! {
     // Define some sensible cansiter limits to ensure upgrades possible
 }
 
-pub mod testing {
-    pub fn hello(){
-        println!("hello");
-    }
-}
-
 #[derive(Deserialize, CandidType)]
 struct MarketplaceStats {
     total : String,
@@ -59,6 +53,71 @@ fn register_customer()-> Option<Customer> {
     let id = ic_cdk::api::caller().to_text();
     ic_cdk::println!("{}", id);
     marketplace::register_customer(id)
+}
+
+#[ic_cdk::query]
+fn get_customer() -> Option<Customer>{
+    let id = ic_cdk::api::caller().to_text();
+    marketplace::get_customer(id)
+}
+
+
+#[ic_cdk::update]
+fn register_merchant() -> Option<Merchant> {
+    let principle = ic_cdk::caller().to_text();
+    marketplace::register_merchant(principle)
+}
+
+
+#[ic_cdk::update]
+fn add_product(product : Product) -> Option<Product> {
+    let principle = ic_cdk::caller().to_text();
+    marketplace::add_product(principle, product)
+}
+
+#[ic_cdk::update]
+fn update_product(product : Product) -> Option<Product> {
+    let merchant_id = ic_cdk::caller().to_text();
+    marketplace::update_product(merchant_id, product)
+}
+
+
+#[ic_cdk::update]
+fn delete_product(sku : String) -> Option<String> {
+    let merchant_id = ic_cdk::caller().to_text();
+    marketplace::delete_product(merchant_id, sku)
+}
+
+
+#[ic_cdk::update]
+fn get_all_products() -> ProductStore {
+    let merchant_id = ic_cdk::caller().to_text();
+    ic_cdk::println!("{}", merchant_id);
+    marketplace::get_all_products(merchant_id)
+}
+
+#[ic_cdk::update]
+fn add_cart(cart : Cart) -> Option<Cart> {
+    let merchant_id =  ic_cdk::caller().to_text();
+    marketplace::add_cart(cart)
+}
+
+#[ic_cdk::update]
+fn update_cart(cart : Cart) -> Option<Cart> {
+    let merchant_id =  ic_cdk::caller().to_text();
+    marketplace::add_cart(cart)
+}
+
+#[ic_cdk::update]
+fn get_cart() -> Option<Cart> {
+    let customer_id =  ic_cdk::caller().to_text();
+    marketplace::get_cart(customer_id)
+}
+
+#[ic_cdk::update]
+fn add_order(order : Order) -> Option<Order> {
+    let customer_id =  ic_cdk::caller().to_text();
+    marketplace::add_order(order)
 }
 
 #[ic_cdk::query]

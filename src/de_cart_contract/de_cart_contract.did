@@ -48,13 +48,13 @@ service : {
   add_cart : (Cart) -> (opt Cart);
   add_order : (Order) -> (opt Order);
   add_product : (Product) -> (opt Product);
-  delete_product : (text, text) -> (opt text);
+  delete_product : (text) -> (opt text);
   get_all_products : () -> (ProductStore);
   get_cart : () -> (opt Cart);
-  get_customer : (text) -> (opt Customer) query;
+  get_customer : () -> (opt Customer) query;
   marketplace_stats : () -> (MarketplaceStats) query;
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
   update_cart : (Cart) -> (opt Cart);
-  update_product : (text, Product) -> (opt Product);
+  update_product : (Product) -> (opt Product);
 }

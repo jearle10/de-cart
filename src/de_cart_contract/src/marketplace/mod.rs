@@ -41,7 +41,7 @@ All the services provided by the marketplace
 */
 
 /* ============== Customer managment ================= */ 
-pub fn register_customer<T : Into<String>>(id : T) -> Option<Customer> {
+pub fn register_customer(id : String) -> Option<Customer> {
     let principle = ic_cdk::caller();
     ic_cdk::println!("{}", principle);
 
@@ -62,8 +62,7 @@ pub fn register_customer<T : Into<String>>(id : T) -> Option<Customer> {
 }
 
 
-#[ic_cdk::query]
-fn get_customer(id : String) -> Option<Customer>{
+pub fn get_customer(id : String) -> Option<Customer>{
     STATE.take().customers.get(id).cloned()
 }
 
@@ -71,21 +70,16 @@ fn get_customer(id : String) -> Option<Customer>{
 
 
 /* ============== Merchant managment ================= */ 
-
-#[ic_cdk::update]
-fn register_merchant() -> Option<Merchant> {
+pub fn register_merchant(id : String) -> Option<Merchant> {
     let mut marketplace = STATE.take();
 
-    let principle = ic_cdk::caller();
-    ic_cdk::println!("{}", principle);
-
     let new_merchant = Merchant {
-        id : principle.to_text(),
+        id : id.clone(),
         ..Merchant::default()
     };
 
     marketplace.merchants.add(new_merchant.clone());
-    marketplace.products.add_merchant(principle.to_text());
+    marketplace.products.add_merchant(id);
 
     STATE.set(marketplace);
     Some(new_merchant)
@@ -93,8 +87,7 @@ fn register_merchant() -> Option<Merchant> {
 
 
 /* ============== Product managment ================= */
-#[ic_cdk::update]
-fn add_product(product : Product) -> Option<Product>{
+pub fn add_product(merchant_id: String , product : Product) -> Option<Product>{
     let new_product = Product { 
         sku: product.sku, 
         merchant_id: product.merchant_id, 
@@ -114,47 +107,31 @@ fn add_product(product : Product) -> Option<Product>{
     Some(new_product)
 }
 
-#[ic_cdk::update]
-fn update_product(_merchant_id :String, product: Product) -> Option<Product>{
-
-    let principle = ic_cdk::caller();
-    ic_cdk::println!("{}", principle);
-    
+pub fn update_product(merchant_id :String, product: Product) -> Option<Product>{
     let mut marketplace = STATE.take();
-    marketplace.products.add(principle.to_text(), product.clone());
+    marketplace.products.add(merchant_id, product.clone());
     STATE.set(marketplace);
     Some(product)
 }
 
-#[ic_cdk::update]
-fn delete_product(_merchant_id :String, sku : String) -> Option<String>{
-
-    let principle = ic_cdk::caller();
-    ic_cdk::println!("{}", principle);
-    
+pub fn delete_product(merchant_id :String, sku : String) -> Option<String>{    
     let mut marketplace = STATE.take();
-    marketplace.products.delete(principle.to_text(), sku);
+    marketplace.products.delete(merchant_id, sku);
     STATE.set(marketplace);
     Some("Deleted".to_string())
 }
 
-#[ic_cdk::update]
-fn get_all_products() -> ProductStore{
-    let principle = ic_cdk::caller();
-    ic_cdk::println!("{}", principle);
-    
+pub fn get_all_products(merchant_id : String) -> ProductStore{
     let marketplace = STATE.take();
-    let products = marketplace.products.get_all(principle.to_text());
+    let products = marketplace.products.get_all(merchant_id);
     STATE.set(marketplace);
     products
 }
 
-
 /* ============== Cart managment ================= */
 
 
-#[ic_cdk::update]
-fn add_cart(cart : Cart) -> Option<Cart> {
+pub fn add_cart(cart : Cart) -> Option<Cart> {
     let _principle =  ic_cdk::caller();
     let mut marketplace = STATE.take();
     marketplace.carts.add(cart.clone());
@@ -162,18 +139,14 @@ fn add_cart(cart : Cart) -> Option<Cart> {
     Some(cart)
 }
 
-
-#[ic_cdk::update]
-fn update_cart(cart : Cart) -> Option<Cart> {
-    let _principle =  ic_cdk::caller();
+pub fn update_cart(cart : Cart) -> Option<Cart> {
     let mut marketplace = STATE.take();
     marketplace.carts.add(cart.clone());
     STATE.set(marketplace);
     Some(cart)
 }
 
-#[ic_cdk::update]
-fn get_cart() -> Option<Cart> {
+pub fn get_cart(customer_id : String) -> Option<Cart> {
     let principle =  ic_cdk::caller();
     let marketplace = STATE.take();
     marketplace.carts.get(principle.to_text()).cloned()
@@ -182,9 +155,7 @@ fn get_cart() -> Option<Cart> {
 
 /* ============== Order managment ================= */
 
-#[ic_cdk::update]
-fn add_order(order : Order) -> Option<Order> {
-    let _principle =  ic_cdk::caller();
+pub fn add_order(order : Order) -> Option<Order> {
     let mut marketplace = STATE.take();
     marketplace.orders.add(order.clone());
     STATE.set(marketplace);
