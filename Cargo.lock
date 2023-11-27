@@ -428,6 +428,7 @@ dependencies = [
  "base64",
  "candid 0.9.6",
  "criterion",
+ "hex",
  "ic-cdk 0.10.0",
  "ic-cdk-timers",
  "serde",
