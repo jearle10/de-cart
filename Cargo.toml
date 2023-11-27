@@ -1,4 +1,5 @@
 [workspace]
 members = [
     "src/de_cart_contract",
+    "src/system_api"
 ]

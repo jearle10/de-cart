@@ -4,6 +4,11 @@
       "candid": "src/de_cart_contract/de_cart_contract.did",
       "package": "de_cart_contract",
       "type": "rust"
+    },
+    "system_api": {
+      "candid": "src/system_api/vetkd_system_api.did",
+      "package": "vetkd_system_api",
+      "type": "rust"
     }
   },
   "defaults": {
