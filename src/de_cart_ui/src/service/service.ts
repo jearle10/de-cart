@@ -4,9 +4,9 @@ import {
   createActor,
   de_cart_contract as de_cart,
   canisterId,
-  de_cart_contract,
 } from "../../../declarations/de_cart_contract";
 import { Principal } from "@dfinity/principal";
+import * as vetkd from "ic-vetkd-utils";
 import { useState, useEffect } from "react";
 import { _SERVICE } from "../../../declarations/de_cart_contract/de_cart_contract.did";
 
@@ -51,14 +51,37 @@ export function useContract(service: Service) {
   return { products, loading };
 }
 
-export async function hello_world() {
-  let response = await de_cart.test();
-  console.log(response);
+export function useEncryptionKey(service: Service) {
+  // const contract: any = de_cart_contract;
+  const contract: any = act;
+  const [key, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        let data = await contract[service]();
+        setData(data);
+        console.log(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching key:", error);
+        setLoading(true);
+      }
+    }
+    fetchData();
+  }, [contract]);
+
+  return { key, loading };
 }
 
 export async function getAllProducts() {
   let response = await de_cart.get_all_products();
   console.log(response);
+}
+
+export async function encrypt() {
+  let public_encryption_key = await de_cart.ibe_encryption_key();
 }
 
 export async function authenticatedActor(authClient: AuthClient) {

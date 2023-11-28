@@ -9,6 +9,14 @@
       "candid": "src/system_api/vetkd_system_api.did",
       "package": "vetkd_system_api",
       "type": "rust"
+    },
+    "de_cart_ui": {
+      "dependencies": ["de_cart_contract", "system_api"],
+      "frontend": {
+        "entrypoint": "src/de_cart_contract/src/index.html"
+      },
+      "source": ["src/de_cart_ui/assets", "dist/de_cart_ui/"],
+      "type": "assets"
     }
   },
   "defaults": {

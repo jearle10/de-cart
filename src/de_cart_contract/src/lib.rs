@@ -33,7 +33,7 @@ use types::{
 
 mod types;
 
-const VETKD_SYSTEM_API_CANISTER_ID: &str = "be2us-64aaa-aaaaa-qaabq-cai"; //"s55qq-oqaaa-aaaaa-aaakq-cai";
+const VETKD_SYSTEM_API_CANISTER_ID: &str = "s55qq-oqaaa-aaaaa-aaakq-cai";
 
 /*
 For now the users will remain anon. Each cart will have an associated
