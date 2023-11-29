@@ -1,16 +1,17 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { ProductGrid } from "../components/ProductGrid";
-import { Service, useContract, useEncryptionKey } from "../service/service";
+import {
+  Service,
+  useContract,
+  useEncryptionKey,
+  useEncryption,
+} from "../service/service";
 
 export function Products() {
   const { loading, products } = useContract("get_all_products" as Service);
-  const { key } = useEncryptionKey("ibe_encryption_key" as Service);
-
-  // Transport key
-  const tsk_seed = window.crypto.getRandomValues(new Uint8Array(32));
-
-  console.log(tsk_seed);
+  // const { key } = useEncryptionKey("ibe_encryption_key" as Service);
+  const { cipherText } = useEncryption("hello");
 
   return (
     <div>

@@ -61,7 +61,6 @@ export function useEncryptionKey(service: Service) {
     async function fetchData() {
       try {
         let data = await contract[service]();
-        setData(data);
         console.log(data);
         setLoading(false);
       } catch (error) {
@@ -80,8 +79,41 @@ export async function getAllProducts() {
   console.log(response);
 }
 
-export async function encrypt() {
-  let public_encryption_key = await de_cart.ibe_encryption_key();
+export function useEncryption(input: any) {
+  const [cipherText, setCipherText] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function encryptText() {
+      let key = await de_cart.ibe_encryption_key();
+      try {
+        let data = await encrypt(input, key);
+        setCipherText(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching key:", error);
+        setLoading(true);
+      }
+    }
+    encryptText();
+  }, []);
+
+  return { cipherText, loading };
+}
+
+export async function encrypt(input: string, key: any): Promise<any> {
+  // Transport key
+  const seed = window.crypto.getRandomValues(new Uint8Array(32));
+  const message_encoded = new TextEncoder().encode(input);
+  console.log(message_encoded);
+  let principal = Principal.fromText("2vxsx-fae");
+  const ibe_ciphertext = vetkd.IBECiphertext.encrypt(
+    hex_decode(key),
+    principal.toUint8Array(),
+    message_encoded,
+    seed
+  );
+  return ibe_ciphertext;
 }
 
 export async function authenticatedActor(authClient: AuthClient) {
@@ -116,3 +148,13 @@ function createAgent(authClient: AuthClient) {
   //   });
   //   let app_backend_principal = identity.getPrincipal();
 }
+
+const hex_decode = (hexString: any) =>
+  Uint8Array.from(
+    hexString.match(/.{1,2}/g).map((byte: any) => parseInt(byte, 16))
+  );
+const hex_encode = (bytes: any) =>
+  bytes.reduce(
+    (str: any, byte: any) => str + byte.toString(16).padStart(2, "0"),
+    ""
+  );

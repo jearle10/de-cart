@@ -10,12 +10,12 @@
       "package": "vetkd_system_api",
       "type": "rust"
     },
-    "de_cart_ui": {
+    "frontend": {
       "dependencies": ["de_cart_contract", "system_api"],
       "frontend": {
-        "entrypoint": "src/de_cart_contract/src/index.html"
+        "entrypoint": "src/frontend/src/index.html"
       },
-      "source": ["src/de_cart_ui/assets", "dist/de_cart_ui/"],
+      "source": ["src/frontend/assets", "dist/frontend/"],
       "type": "assets"
     }
   },

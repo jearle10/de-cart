@@ -11,7 +11,7 @@ export function ProductGrid({ data }: any) {
   ];
 
   let products = data.products[0][1].map((entry: any) => entry[1]);
-  console.log(products);
+  // console.log(products);
 
   return (
     <main className="p-6 bg-gray-100 dark:bg-zinc-800">
