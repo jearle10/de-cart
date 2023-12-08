@@ -59,6 +59,7 @@ service : {
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
   symmetric_key_verification_key : () -> (text);
+  test : () -> (text) query;
   update_cart : (Cart) -> (opt Cart);
   update_product : (Product) -> (opt Product);
 }

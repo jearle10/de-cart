@@ -9,78 +9,16 @@ import { HttpAgent, Actor } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
 
 let fetched_symmetric_key = null;
-let app_backend_actor = de_cart_contract;
+export const app_backend_actor = de_cart_contract;
 let app_backend_principal = await Actor.agentOf(
   app_backend_actor
 ).getPrincipal();
+
+// window.location.origin = "http://127.0.0.1:4943";
+
 document.getElementById("principal").innerHTML = annotated_principal(
   app_backend_principal
 );
-
-document
-  .getElementById("get_symmetric_key_form")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const button = e.target.querySelector("button");
-    button.setAttribute("disabled", true);
-    const result = document.getElementById("get_symmetric_key_result");
-
-    result.innerText = "Fetching symmetric key...";
-
-    const aes_256_key = await get_aes_256_gcm_key();
-    result.innerText = "Done. AES-GCM-256 key available for local usage.";
-
-    button.removeAttribute("disabled");
-
-    fetched_symmetric_key = aes_256_key;
-    update_plaintext_button_state();
-    update_ciphertext_button_state();
-
-    return false;
-  });
-
-document
-  .getElementById("encrypt_form")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const button = e.target.querySelector("button");
-    button.setAttribute("disabled", true);
-    const result = document.getElementById("encrypt_result");
-
-    result.innerText = "Encrypting...";
-    const ciphertext = await aes_gcm_encrypt(
-      document.getElementById("plaintext").value,
-      fetched_symmetric_key
-    );
-
-    result.innerText = "ciphertext: " + ciphertext;
-
-    button.removeAttribute("disabled");
-    return false;
-  });
-
-document
-  .getElementById("decrypt_form")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const button = e.target.querySelector("button");
-    button.setAttribute("disabled", true);
-    const result = document.getElementById("decrypt_result");
-
-    result.innerText = "Decrypting...";
-    try {
-      const plaintext = await aes_gcm_decrypt(
-        document.getElementById("ciphertext").value,
-        fetched_symmetric_key
-      );
-      result.innerText = "plaintext: " + plaintext;
-    } catch (e) {
-      result.innerText = "Error: " + e;
-    }
-
-    button.removeAttribute("disabled");
-    return false;
-  });
 
 document.getElementById("plaintext").addEventListener("keyup", async (e) => {
   update_plaintext_button_state();
@@ -114,64 +52,6 @@ function update_ciphertext_button_state() {
   }
 }
 
-async function get_aes_256_gcm_key() {
-  const seed = window.crypto.getRandomValues(new Uint8Array(32));
-  const tsk = new vetkd.TransportSecretKey(seed);
-  const ek_bytes_hex =
-    await app_backend_actor.encrypted_symmetric_key_for_caller(
-      tsk.public_key()
-    );
-  const pk_bytes_hex = await app_backend_actor.symmetric_key_verification_key();
-  return tsk.decrypt_and_hash(
-    hex_decode(ek_bytes_hex),
-    hex_decode(pk_bytes_hex),
-    app_backend_principal.toUint8Array(),
-    32,
-    new TextEncoder().encode("aes-256-gcm")
-  );
-}
-
-async function aes_gcm_encrypt(message, rawKey) {
-  const iv = window.crypto.getRandomValues(new Uint8Array(12)); // 96-bits; unique per message
-  const aes_key = await window.crypto.subtle.importKey(
-    "raw",
-    rawKey,
-    "AES-GCM",
-    false,
-    ["encrypt"]
-  );
-  const message_encoded = new TextEncoder().encode(message);
-  const ciphertext_buffer = await window.crypto.subtle.encrypt(
-    { name: "AES-GCM", iv: iv },
-    aes_key,
-    message_encoded
-  );
-  const ciphertext = new Uint8Array(ciphertext_buffer);
-  var iv_and_ciphertext = new Uint8Array(iv.length + ciphertext.length);
-  iv_and_ciphertext.set(iv, 0);
-  iv_and_ciphertext.set(ciphertext, iv.length);
-  return hex_encode(iv_and_ciphertext);
-}
-
-async function aes_gcm_decrypt(ciphertext_hex, rawKey) {
-  const iv_and_ciphertext = hex_decode(ciphertext_hex);
-  const iv = iv_and_ciphertext.subarray(0, 12); // 96-bits; unique per message
-  const ciphertext = iv_and_ciphertext.subarray(12);
-  const aes_key = await window.crypto.subtle.importKey(
-    "raw",
-    rawKey,
-    "AES-GCM",
-    false,
-    ["decrypt"]
-  );
-  let decrypted = await window.crypto.subtle.decrypt(
-    { name: "AES-GCM", iv: iv },
-    aes_key,
-    ciphertext
-  );
-  return new TextDecoder().decode(decrypted);
-}
-
 document
   .getElementById("ibe_encrypt_form")
   .addEventListener("submit", async (e) => {
@@ -179,14 +59,16 @@ document
     const button = e.target.querySelector("button");
     button.setAttribute("disabled", true);
     const result = document.getElementById("ibe_encrypt_result");
+    let message = document.getElementById("ibe_plaintext").value;
 
     try {
-      const startTime = performance.now();
-      const ibe_ciphertext = await ibe_encrypt(
-        document.getElementById("ibe_plaintext").value
-      );
-      const endTime = performance.now();
-      console.log(endTime - startTime);
+      const ibe_ciphertext = await ibe_encrypt(message);
+      console.log("=== Enryption Summary ===");
+      console.log("Cipher text: ", ibe_ciphertext);
+      console.log("Message length: ", message.length);
+      console.log("Ciphertext Length: ", ibe_ciphertext.length);
+      console.log("=========");
+
       result.innerText = "IBE ciphertext: " + ibe_ciphertext;
     } catch (e) {
       result.innerText = "Error: " + e;
@@ -259,7 +141,18 @@ function update_ibe_decrypt_button_state() {
 async function ibe_encrypt(message) {
   document.getElementById("ibe_encrypt_result").innerText =
     "Fetching IBE encryption key...";
+
+  let authClient = await AuthClient.create();
+  const identity = authClient.getIdentity();
+  const agent = new HttpAgent({ identity });
+  let actor = createActor("bkyz2-fmaaa-aaaaa-qaaaq-cai", {
+    agent,
+    host: "http://127.0.0.1:4943",
+  });
+
   const pk_bytes_hex = await app_backend_actor.ibe_encryption_key();
+  console.log("ibe_key", pk_bytes_hex);
+  // const pk_bytes_hex = await actor.ibe_encryption_key();
 
   document.getElementById("ibe_encrypt_result").innerText =
     "Preparing IBE-encryption...";
@@ -271,6 +164,9 @@ async function ibe_encrypt(message) {
 
   document.getElementById("ibe_encrypt_result").innerText =
     "IBE-encrypting for principal" + ibe_principal.toText() + "...";
+
+  console.log(ibe_principal);
+
   const ibe_ciphertext = vetkd.IBECiphertext.encrypt(
     hex_decode(pk_bytes_hex),
     ibe_principal.toUint8Array(),
@@ -352,3 +248,9 @@ const hex_decode = (hexString) =>
   Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
 const hex_encode = (bytes) =>
   bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
+
+// Util
+
+function element(selector) {
+  return document.getElementById(element);
+}

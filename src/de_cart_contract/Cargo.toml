@@ -20,9 +20,5 @@ hex = "0.4"
 criterion = { version = "0.5.1" }
 
 [[bench]]
-name = "microbench_customer"
-harness = false
-
-[[bench]]
-name = "microbench_merchant"
+name = "microbench"
 harness = false

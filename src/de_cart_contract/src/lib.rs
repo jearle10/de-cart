@@ -130,6 +130,12 @@ fn add_order(order : Order) -> Option<Order> {
     marketplace::add_order(order)
 }
 
+
+#[ic_cdk::query]
+fn test()-> String {
+    String::from("Hello")
+}
+
 #[ic_cdk::query]
 fn marketplace_stats() -> MarketplaceStats {
     ic_cdk::println!("{}", ic_cdk::caller().to_text());

@@ -18,6 +18,8 @@
       <button id="login">Login (optional)</button>
     </form>
     <hr />
+
+    <!--  -->
     <h2 id="symmetric_encryption_demo">Encryption with symmetric (AES-GCM-256) key</h1>
     <form action="#" id="get_symmetric_key_form">
       <button type="submit">Fetch symmetric key for local usage</button>
@@ -36,14 +38,19 @@
     </form>
     <section id="decrypt_result"></section>
     <hr />
+
+
+    <!-- IBE input -->
     <h2 id="ibedemo">Identity-Based Encryption (IBE)</h1>
     <form action="#" id="ibe_encrypt_form">
       <label for="ibe_plaintext">Plaintext:</label>
       <input type="text" id="ibe_plaintext"><br><br>
       <label for="ibe_principal">Encrypt for principal:</label>
       <input type="text" value="2vxsx-fae" id="ibe_principal"><br><br>
-      <button type="submit" id="ibe_encrypt" disabled="true">IBE-encrypt</button>
+      <button type="submit" id="ibe_encrypt" disabled="true">Test IBE-encrypt</button>
     </form>
+
+    <!--End IBE input -->
     <section id="ibe_encrypt_result"></section>
     <form action="#" id="ibe_decrypt_form">
       <label for="ibe_ciphertext">Ciphertext:</label>
