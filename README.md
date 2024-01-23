@@ -1,16 +1,26 @@
 # de-cart
 
-De-cart is a fully on-chain decentralised e-commerce application hosted on 'Internet Computer Protocol's (ICP) smart contract platform. This project was created to support my MSc research paper titled 'Using decentralised encryption to create confidential e-commerce smart contracts'.
+De-cart is a fully on-chain decentralised e-commerce application hosted on 'Internet Computer Protocol's (ICP) smart contract platform. This project was created to support my MSc research paper.
 
 The purpose of this research paper was to explore how an e-commmerce smart contract could encrypt sensitive data within a smart contract's state, thus opening up new use-cases that are currently not possible. Examples of such use cases:
+
 - Merchant API keys
 - Shopping Carts
-- Delivery address / Fulfilment details  
+- Delivery address / Fulfilment details
 
 To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
 
 To learn more before you start working with de-cart, see the following documentation available online:
 
+## Installation of the following is required to run this project
+
+Rust - https://www.rust-lang.org/tools/install
+
+`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+
+DFX - https://internetcomputer.org/docs/current/developer-docs/setup/install/
+
+`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`
 
 ## Running the project locally
 

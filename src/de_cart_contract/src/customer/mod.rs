@@ -1,20 +1,18 @@
+use candid::{CandidType, Deserialize};
 use std::collections::HashMap;
-use candid::{ CandidType, Deserialize };
 
 use crate::state::Store;
 
 #[derive(Deserialize, Debug, CandidType, Default, Clone)]
 pub struct Customer {
-    pub (crate) id : String ,
-    pub (crate) email : String ,
-    name : String,
-    balance : String,
-    address: String
+    pub id: String,
+    pub(crate) email: String,
+    name: String,
+    balance: String,
+    address: String,
 }
 
-
 impl Customer {
-
     fn total_bytes(&self) -> usize {
         let mut bytes = 0;
         bytes += self.id.len();
@@ -26,28 +24,28 @@ impl Customer {
     }
 }
 
-
 #[derive(Deserialize, Debug, CandidType, Default, Clone)]
 pub struct CustomerStore {
-    pub customers : HashMap<String, Customer>
+    pub customers: HashMap<String, Customer>,
 }
 
 impl CustomerStore {
     pub fn new() -> Self {
         Self {
-            customers : HashMap::new()
+            customers: HashMap::new(),
         }
     }
 }
 
 impl Store<Customer> for CustomerStore {
-    fn get(&self, customer_id : String ) -> Option<&Customer> {
+    fn get(&self, customer_id: String) -> Option<&Customer> {
         self.customers.get(&customer_id)
     }
 
-    fn add(&mut self, customer : Customer) -> Option<Customer> {
+    fn add(&mut self, customer: Customer) -> Option<Customer> {
         // Need to insert based on principal id
-        self.customers.insert(customer.id.to_string(), customer.clone());
+        self.customers
+            .insert(customer.id.to_string(), customer.clone());
         Some(customer)
     }
 
@@ -55,25 +53,25 @@ impl Store<Customer> for CustomerStore {
         self.customers.values().cloned().collect()
     }
 
-    fn update(&mut self, customer : Customer) -> Option<Customer> {
+    fn update(&mut self, customer: Customer) -> Option<Customer> {
         self.customers.insert(customer.id.to_string(), customer)
     }
 
-    fn delete(&mut self , customer_id : String) -> Option<Customer> {
+    fn delete(&mut self, customer_id: String) -> Option<Customer> {
         self.customers.remove(customer_id.as_str())
     }
 }
 
 impl CustomerStore {
-    pub (crate) fn total_bytes(&self) -> usize {
+    pub(crate) fn total_bytes(&self) -> usize {
         let mut total_bytes = 0;
         self.customers
             .iter()
-            .for_each(|(id , customer)| total_bytes += id.len() + customer.total_bytes());
+            .for_each(|(id, customer)| total_bytes += id.len() + customer.total_bytes());
         total_bytes
     }
 
-    pub (crate) fn total_customer(&self) -> String {
+    pub(crate) fn total_customer(&self) -> String {
         self.customers.iter().len().to_string()
     }
 }
@@ -83,31 +81,29 @@ mod tests {
 
     use super::*;
     #[test]
-    fn it_adds_a_customer(){
-
+    fn it_adds_a_customer() {
         let mut store = CustomerStore::new();
 
         let new_customer = Customer {
-            id : "2vxsx-fae".to_string(),
+            id: "2vxsx-fae".to_string(),
             ..Customer::default()
         };
 
         ic_cdk::println!("{:?}", new_customer);
         store.add(new_customer.clone());
 
-        let customers : Vec<&String> = store.customers.keys().collect();
+        let customers: Vec<&String> = store.customers.keys().collect();
         let length = customers.len();
 
         assert_eq!(length, 1);
     }
 
     #[test]
-    fn it_deletes_a_customer(){
-
+    fn it_deletes_a_customer() {
         let mut store = CustomerStore::new();
 
         let new_customer = Customer {
-            id : "2vxsx-fae".to_string(),
+            id: "2vxsx-fae".to_string(),
             ..Customer::default()
         };
 
@@ -115,72 +111,69 @@ mod tests {
         store.add(new_customer.clone());
         store.delete("2vxsx-fae".to_string());
 
-        let customers : Vec<&String> = store.customers.keys().collect();
+        let customers: Vec<&String> = store.customers.keys().collect();
         let length = customers.len();
 
         assert_eq!(length, 0);
     }
 
     #[test]
-    fn it_updates_a_customer(){
-
+    fn it_updates_a_customer() {
         let mut store = CustomerStore::new();
 
         let new_customer = Customer {
-            id : "2vxsx-fae".to_string(),
+            id: "2vxsx-fae".to_string(),
             ..Customer::default()
         };
 
         ic_cdk::println!("{:?}", new_customer);
         store.add(new_customer.clone());
 
-
         let updated_customer = Customer {
-            id : "2vxsx-fae".to_string(),
-            email : "jian@email.com".to_string(),
+            id: "2vxsx-fae".to_string(),
+            email: "jian@email.com".to_string(),
             ..Customer::default()
         };
 
         store.update(updated_customer.clone());
 
-
-        assert_eq!(store.customers.get("2vxsx-fae").unwrap().email, "jian@email.com".to_string());
+        assert_eq!(
+            store.customers.get("2vxsx-fae").unwrap().email,
+            "jian@email.com".to_string()
+        );
     }
 
     #[test]
-    fn it_calculates_bytes_of_customer(){
-        
+    fn it_calculates_bytes_of_customer() {
         let customer = Customer {
-            id : "1".to_string() ,
-            email : "1".to_string() ,
-            name : "1".to_string(),
-            balance : "1".to_string(),
-            address: "1".to_string()
+            id: "1".to_string(),
+            email: "1".to_string(),
+            name: "1".to_string(),
+            balance: "1".to_string(),
+            address: "1".to_string(),
         };
-        
+
         let customer_storage = customer.total_bytes();
-        assert_eq!(customer_storage , 5)
+        assert_eq!(customer_storage, 5)
     }
 
     #[test]
-    fn it_calculates_bytes_of_customer_store(){
-
+    fn it_calculates_bytes_of_customer_store() {
         let customer1 = Customer {
-            id : "1".to_string() ,
-            email : "1".to_string() ,
-            name : "1".to_string(),
-            balance : "1".to_string(),
-            address: "1".to_string()
+            id: "1".to_string(),
+            email: "1".to_string(),
+            name: "1".to_string(),
+            balance: "1".to_string(),
+            address: "1".to_string(),
         };
 
         let customer2 = Customer {
-            id : "2".to_string() ,
-            email : "2".to_string() ,
-            name : "2".to_string(),
-            balance : "2".to_string(),
-            address: "2".to_string()
+            id: "2".to_string(),
+            email: "2".to_string(),
+            name: "2".to_string(),
+            balance: "2".to_string(),
+            address: "2".to_string(),
         };
-
 
         let mut store = CustomerStore::default();
 
@@ -189,7 +182,6 @@ mod tests {
 
         let customer_store_storage = store.total_bytes();
 
-        assert_eq!(customer_store_storage , 12)
+        assert_eq!(customer_store_storage, 12)
     }
-
 }

@@ -1,7 +1,6 @@
 // use ic_agent::{Agent, export::Principal};
 // use candid::{Encode, Decode, CandidType, Nat};
 
-
 // #[test]
 // fn e2e_get_all_product(){
 
@@ -19,7 +18,6 @@
 //         .with_effective_canister_id(effective_canister_id)
 //         .call_and_wait()
 //         .await?;
-
 
 //     let result = Decode!(response.as_slice(), CreateCanisterResult)?;
 //     println!("{}",result)

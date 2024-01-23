@@ -51,15 +51,14 @@ service : {
   delete_product : (text) -> (opt text);
   encrypted_ibe_decryption_key_for_caller : (vec nat8) -> (text);
   encrypted_symmetric_key_for_caller : (vec nat8) -> (text);
-  get_all_products : () -> (ProductStore);
-  get_cart : () -> (opt Cart);
+  get_all_products : () -> (ProductStore) query;
+  get_cart : () -> (opt Cart) query;
   get_customer : () -> (opt Customer) query;
   ibe_encryption_key : () -> (text);
   marketplace_stats : () -> (MarketplaceStats) query;
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
   symmetric_key_verification_key : () -> (text);
-  test : () -> (text) query;
   update_cart : (Cart) -> (opt Cart);
   update_product : (Product) -> (opt Product);
 }
