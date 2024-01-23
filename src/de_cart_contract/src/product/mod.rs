@@ -92,7 +92,7 @@ impl ProductStore {
             .insert(merchant_id.to_string(), HashMap::new());
     }
 
-    fn get_merchant_store(
+    fn _get_merchant_store(
         &self,
         merchant_id: String,
     ) -> Option<(&ProductId, &HashMap<ProductId, Product>)> {
@@ -149,7 +149,7 @@ mod tests {
         let merchant_id = "one".to_string();
 
         store.add_merchant(merchant_id.clone());
-        let merchant_store = store.get_merchant_store(merchant_id.clone()).unwrap();
+        let merchant_store = store._get_merchant_store(merchant_id.clone()).unwrap();
         assert_eq!(&merchant_id, merchant_store.0);
     }
 

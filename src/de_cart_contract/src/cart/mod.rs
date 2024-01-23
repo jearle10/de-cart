@@ -3,7 +3,7 @@ use crate::state::Store;
 use candid::{CandidType, Deserialize};
 use std::collections::HashMap;
 
-type CustomerId = String;
+type _CustomerId = String;
 
 #[derive(Deserialize, CandidType, Default, Clone)]
 pub struct Cart {
