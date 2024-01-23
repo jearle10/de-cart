@@ -10,8 +10,6 @@ The purpose of this research paper was to explore how an e-commmerce smart contr
 
 To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
 
-To learn more before you start working with de-cart, see the following documentation available online:
-
 ## Installation of the following is required to run this project
 
 Rust - https://www.rust-lang.org/tools/install
@@ -30,8 +28,11 @@ If you want to run the project locally, you can use the following commands:
 # Starts the replica, running in the background
 dfx start --background
 
+# The vetkd system api is not yet available on the main net so this system_api needs to be deployed as a cainster locally
+dfx canister create system_api --specified-id s55qq-oqaaa-aaaaa-aaakq-cai
+
 # Deploys your canisters to the replica and generates your candid interface
-dfx deploy
+dfx deploy --network=local
 ```
 
 Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
