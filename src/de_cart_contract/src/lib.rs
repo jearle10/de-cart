@@ -10,7 +10,7 @@ mod product;
 mod state;
 // mod api;
 
-use candid::{CandidType, Deserialize};
+use candid::{CandidType, Deserialize, Principal};
 use cart::*;
 use customer::*;
 
@@ -76,19 +76,19 @@ fn register_merchant() -> Option<Merchant> {
     marketplace::register_merchant(principle)
 }
 
-#[ic_cdk::update]
+#[ic_cdk::update(guard = "auth_merchant")]
 fn add_product(product: Product) -> Option<Product> {
     let principle = ic_cdk::caller().to_text();
     marketplace::add_product(principle, product)
 }
 
-#[ic_cdk::update]
+#[ic_cdk::update(guard = "auth_merchant")]
 fn update_product(product: Product) -> Option<Product> {
     let merchant_id = ic_cdk::caller().to_text();
     marketplace::update_product(merchant_id, product)
 }
 
-#[ic_cdk::update]
+#[ic_cdk::update(guard = "auth_merchant")]
 fn delete_product(sku: String) -> Option<String> {
     let merchant_id = ic_cdk::caller().to_text();
     marketplace::delete_product(merchant_id, sku)
@@ -125,6 +125,14 @@ fn add_order(order: Order) -> Option<Order> {
     marketplace::add_order(order)
 }
 
+fn auth_merchant() -> Result<(), String> {
+    let id = ic_cdk::caller().to_text();
+    match marketplace::get_merchant(id) {
+        Some(_) => Ok(()),
+        None => Err("Merchant not found".to_string()),
+    }
+}
+
 #[ic_cdk::query]
 fn marketplace_stats() -> MarketplaceStats {
     ic_cdk::println!("{}", ic_cdk::caller().to_text());
@@ -150,7 +158,6 @@ fn marketplace_stats() -> MarketplaceStats {
     let _count = marketplace.products.total_products();
     STATE.set(marketplace);
 
-    
     MarketplaceStats {
         total: format!("bytes: {}", bytes),
         customers: format!("count: {}, size: {}", customers_count, customers_size),

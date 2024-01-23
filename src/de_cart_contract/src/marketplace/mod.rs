@@ -1,5 +1,6 @@
 use candid::{CandidType, Deserialize};
 use std::collections::HashMap;
+use std::marker;
 
 use crate::cart::*;
 use crate::customer::*;
@@ -80,6 +81,10 @@ pub fn register_merchant(id: String) -> Option<Merchant> {
     Some(new_merchant)
 }
 
+pub fn get_merchant(id: String) -> Option<Merchant> {
+    STATE.take().merchants.get(id).cloned()
+}
+
 /* ============== Product managment ================= */
 pub fn add_product(_merchant_id: String, product: Product) -> Option<Product> {
     let new_product = Product {
@@ -129,6 +134,7 @@ pub fn get_all_products(merchant_id: String) -> ProductStore {
 pub fn add_cart(cart: Cart) -> Option<Cart> {
     let _principle = ic_cdk::caller();
     let mut marketplace = STATE.take();
+    // Need to check if the merchant exists first
     marketplace.carts.add(cart.clone());
     STATE.set(marketplace);
     Some(cart)
