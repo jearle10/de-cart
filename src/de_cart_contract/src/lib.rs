@@ -133,6 +133,14 @@ fn auth_merchant() -> Result<(), String> {
     }
 }
 
+fn auth_customer() -> Result<(), String> {
+    let id = ic_cdk::caller().to_text();
+    match marketplace::get_customer(id) {
+        Some(_) => Ok(()),
+        None => Err("Customer not found".to_string()),
+    }
+}
+
 #[ic_cdk::query]
 fn marketplace_stats() -> MarketplaceStats {
     ic_cdk::println!("{}", ic_cdk::caller().to_text());
