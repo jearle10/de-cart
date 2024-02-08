@@ -12,14 +12,6 @@ type Customer = record {
   email : text;
   address : text;
 };
-type MarketplaceStats = record {
-  total : text;
-  carts : text;
-  orders : text;
-  merchants : text;
-  products : text;
-  customers : text;
-};
 type Merchant = record { id : text; name : text; email : text };
 type Order = record {
   id : text;
@@ -49,16 +41,12 @@ service : {
   add_order : (Order) -> (opt Order);
   add_product : (Product) -> (opt Product);
   delete_product : (text) -> (opt text);
-  encrypted_ibe_decryption_key_for_caller : (vec nat8) -> (text);
-  encrypted_symmetric_key_for_caller : (vec nat8) -> (text);
   get_all_products : () -> (ProductStore) query;
   get_cart : () -> (opt Cart) query;
   get_customer : () -> (opt Customer) query;
-  ibe_encryption_key : () -> (text);
-  marketplace_stats : () -> (MarketplaceStats) query;
+  hello : () -> (text) query;
   register_customer : () -> (opt Customer);
   register_merchant : () -> (opt Merchant);
-  symmetric_key_verification_key : () -> (text);
   update_cart : (Cart) -> (opt Cart);
   update_product : (Product) -> (opt Product);
 }

@@ -4,25 +4,6 @@
       "candid": "src/de_cart_contract/de_cart_contract.did",
       "package": "de_cart_contract",
       "type": "rust"
-    },
-    "system_api": {
-      "candid": "src/system_api/vetkd_system_api.did",
-      "package": "vetkd_system_api",
-      "type": "rust"
-    },
-    "frontend": {
-      "dependencies": ["de_cart_contract", "system_api"],
-      "frontend": {
-        "entrypoint": "src/frontend/src/index.html"
-      },
-      "source": ["src/frontend/assets", "dist/frontend/"],
-      "type": "assets"
-    }
-  },
-  "networks": {
-    "local": {
-      "bind": "127.0.0.1:4943",
-      "type": "ephemeral"
     }
   },
   "defaults": {
